@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9DC1B24B-AFEA-423E-87CD-661A17D97F30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{53E8B477-3A9C-45ED-A789-ABD6862A2015}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataFilters.AspNetCore", "src\DataFilters.AspNetCore\DataFilters.AspNetCore.csproj", "{542DA751-0594-47D0-8067-472E6A54C0B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{415B1601-8042-4323-98E6-960C2C508D42}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		CHANGELOG.md = CHANGELOG.md
+		core.props = core.props
+		LICENSE = LICENSE
+		README.md = README.md
+		tests.props = tests.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFilters.AspNetCore.UnitTests", "test\DataFilters.AspNetCore.UnitTests\DataFilters.AspNetCore.UnitTests.csproj", "{4DAC2B60-415C-4609-975C-083B5D6B86CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataFilters.AspNetCore.ContinuousIntegration", "build\DataFilters.AspNetCore.ContinuousIntegration.csproj", "{F4350436-A0A3-400B-9608-817721E89099}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4350436-A0A3-400B-9608-817721E89099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4350436-A0A3-400B-9608-817721E89099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{542DA751-0594-47D0-8067-472E6A54C0B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{542DA751-0594-47D0-8067-472E6A54C0B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{542DA751-0594-47D0-8067-472E6A54C0B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{542DA751-0594-47D0-8067-472E6A54C0B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DAC2B60-415C-4609-975C-083B5D6B86CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAC2B60-415C-4609-975C-083B5D6B86CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAC2B60-415C-4609-975C-083B5D6B86CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAC2B60-415C-4609-975C-083B5D6B86CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{542DA751-0594-47D0-8067-472E6A54C0B2} = {9DC1B24B-AFEA-423E-87CD-661A17D97F30}
+		{4DAC2B60-415C-4609-975C-083B5D6B86CF} = {53E8B477-3A9C-45ED-A789-ABD6862A2015}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {263E3EAF-0C9F-45C6-85E9-89F8CC530CEE}
+	EndGlobalSection
+EndGlobal
