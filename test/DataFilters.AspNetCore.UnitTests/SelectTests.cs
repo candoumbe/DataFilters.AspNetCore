@@ -52,16 +52,14 @@ namespace DataFilters.AspNetCore.UnitTests
                     $"Two distinct {nameof(Select)} instances with same properties must be equal"
                 };
 
+                Select selector = new("Name");
+                yield return new object[]
                 {
-                    Select selector = new("Name");
-                    yield return new object[]
-                    {
                         selector,
                         selector,
                         true,
                         $"A {nameof(Select)} instance is equal to itself"
-                    };
-                }
+                };
             }
         }
 

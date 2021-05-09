@@ -71,10 +71,10 @@ namespace DataFilters.AspNetCore.Filters
         /// <remarks>
         /// By default, only responses following "GET" requests will be handled.
         /// </remarks>
-        /// <param name="onGet">Enable/disable selecting properties on "GET" responses</param>
-        /// <param name="onPost">Enable/disable selecting properties on "POST" responses</param>
-        /// <param name="onPatch">Enable/disable selecting properties on "PATCH" responses</param>
-        /// <param name="onPut">Enable/disable selecting properties on "PUT" responses</param>
+        /// <param name="onGet">Enable/disable selecting properties on "GET" body's responses</param>
+        /// <param name="onPost">Enable/disable selecting properties on "POST" body's responses</param>
+        /// <param name="onPatch">Enable/disable selecting properties on "PATCH" body's responses</param>
+        /// <param name="onPut">Enable/disable selecting properties on "PUT"'s body responses</param>
         public SelectPropertiesActionFilterAttribute(bool onGet = true,
                                                      bool onPost = false,
                                                      bool onPatch = false,
@@ -90,28 +90,26 @@ namespace DataFilters.AspNetCore.Filters
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             if (context.HttpContext.Request.Headers.TryGetValue(FieldSelectorHeaderName, out StringValues fields)
-                && fields.AtLeastOnce(field => !string.IsNullOrWhiteSpace(field)))
+                && fields.AtLeastOnce(field => !string.IsNullOrWhiteSpace(field))
+                && context.Result is OkObjectResult objectResult)
             {
-                if (context.Result is OkObjectResult objectResult)
+                string method = context.HttpContext.Request.Method;
+                if ((OnGet && IsGet(method))
+                    || (OnPost && IsPost(method))
+                    || (OnPatch && IsPatch(method))
+                    || (OnPut && IsPut(method))
+                    )
                 {
-                    string method = context.HttpContext.Request.Method;
-                    if ((OnGet && IsGet(method))
-                        || (OnPost && IsPost(method))
-                        || (OnPatch && IsPatch(method))
-                        || (OnPut && IsPut(method))
-                        )
-                    {
-                        object obj = objectResult.Value;
-                        IEnumerable<PropertyInfo> propertyInfos = obj.GetType()
-                                                                     .GetProperties()
-                                                                     .Where(pi => fields.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)));
+                    object obj = objectResult.Value;
+                    IEnumerable<PropertyInfo> propertyInfos = obj.GetType()
+                                                                 .GetProperties()
+                                                                 .Where(pi => fields.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)));
 
-                        ExpandoObject after = new();
+                    ExpandoObject after = new();
 
-                        propertyInfos.ForEach(prop => after.TryAdd(prop.Name, prop.GetValue(obj)));
+                    propertyInfos.ForEach(prop => after.TryAdd(prop.Name, prop.GetValue(obj)));
 
-                        context.Result = new OkObjectResult(after);
-                    }
+                    context.Result = new OkObjectResult(after);
                 }
             }
         }
