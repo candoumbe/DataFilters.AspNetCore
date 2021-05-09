@@ -8,7 +8,6 @@ namespace DataFilters.AspNetCore
     /// </summary>
     public class DataFilterOptions
     {
-        private static readonly PropertyNameResolutionStrategy DefaultStrategy = PropertyNameResolutionStrategy.Default;
         private const int DefaultCacheSize = 1_000;
 
         /// <summary>
@@ -66,12 +65,12 @@ namespace DataFilters.AspNetCore
         ///     MaxCacheSize = -3,
         ///     Strategy = PropertyNameResolutionStrategy.CamelCase
         /// };
-        /// 
+        ///
         /// options.Validate();
         /// </code>
-        /// 
+        ///
         /// The last line will throw a <see cref="DataFiltersOptionsInvalidValueException"/> because <see cref="MaxCacheSize"/> must be a positive integer
-        /// 
+        ///
         /// </example>
         /// </remarks>
         /// <exception cref="DataFiltersOptionsInvalidValueException">when <see cref="MaxCacheSize"/>'s value is negative or zero</exception>

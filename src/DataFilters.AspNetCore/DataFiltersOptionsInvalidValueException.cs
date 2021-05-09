@@ -1,7 +1,6 @@
 ﻿
 namespace DataFilters.AspNetCore
 {
-
     using System;
     using System.Runtime.Serialization;
 
