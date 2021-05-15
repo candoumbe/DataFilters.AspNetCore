@@ -3,7 +3,7 @@
     <LangVersion>latest</LangVersion>
     <Authors>Cyrille NDOUMBE</Authors>
     <Copyright>2021 - Cyrille NDOUMBE </Copyright>
-    <RepositoryUrl>https://github.com/candoumbe/DataFilters.AspNeCore</RepositoryUrl>
+    <RepositoryUrl>https://github.com/candoumbe/DataFilters.AspNetCore</RepositoryUrl>
     <PublishUrl>true</PublishUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
@@ -55,7 +55,6 @@
   <Choose>
     <!-- Package to add for tests projects-->
     <When Condition="'(IsTestProject)' == 'true'">
-
     </When>
     <Otherwise>
       <ItemGroup>

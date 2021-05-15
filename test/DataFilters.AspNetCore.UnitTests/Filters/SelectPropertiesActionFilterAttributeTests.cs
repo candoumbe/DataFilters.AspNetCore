@@ -1,5 +1,7 @@
 ﻿namespace DataFilters.AspNetCore.UnitTests.Filters
 {
+    using Bogus;
+
     using DataFilters.AspNetCore.Filters;
 
     using FluentAssertions;
@@ -92,7 +94,7 @@
                     Get,
                     new HeaderDictionary(new Dictionary<string, StringValues>
                     {
-                        [SelectPropertiesActionFilterAttribute.FieldSelectorHeaderName] = new StringValues("prop")
+                        [SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName] = new StringValues("prop")
                     }),
                     new
                     {
@@ -106,7 +108,29 @@
                     (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
                                                                            && props.Once(propName => propName =="prop")
                     ),
-                    $"The filter is configured to support HTTP verb '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.FieldSelectorHeaderName}' header is set to 'prop'"
+                    $"The filter is configured to support HTTP verb '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName}' header is set to 'prop'"
+                };
+
+                yield return new object[]
+                {
+                    Get,
+                    new HeaderDictionary(new Dictionary<string, StringValues>
+                    {
+                        [SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName] = new StringValues("prop")
+                    }),
+                    new
+                    {
+                        prop = "value",
+                        prop2 = new
+                        {
+                            subProp = 1,
+                            subProp2 = 2
+                        },
+                    },
+                    (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
+                                                                           && props.Once(propName => propName =="prop2")
+                    ),
+                    $"The filter is configured to support HTTP '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName}' header is set to 'prop'"
                 };
             }
         }
@@ -193,6 +217,91 @@
 
             result.Should()
                   .Be(okObjectResult);
+        }
+
+        [Property]
+        public Property Given_both_http_headers_for_including_and_excluding_fields_are_specified_OnActionExecuting_should_return_BadRequestObjectResult_with_the_specified_message(bool onGet,
+                                                                                                                                                                                   bool onPost,
+                                                                                                                                                                                   bool onPut,
+                                                                                                                                                                                   bool onPatch,
+                                                                                                                                                                                   NonWhiteSpaceString property)
+        {
+            // Arrange
+            Faker faker = new();
+            string method = faker.PickRandom(Get, Post, Put, Patch, Head, Connect, Delete, Options, Trace);
+            SelectPropertiesActionFilterAttribute sut = new(onGet, onPost, onPatch, onPut);
+
+            _outputHelper.WriteLine($"{nameof(SelectPropertiesActionFilterAttribute.OnGet)} : {sut.OnGet}");
+            _outputHelper.WriteLine($"{nameof(SelectPropertiesActionFilterAttribute.OnPost)} : {sut.OnPost}");
+            _outputHelper.WriteLine($"{nameof(SelectPropertiesActionFilterAttribute.OnPut)} : {sut.OnPut}");
+            _outputHelper.WriteLine($"{nameof(SelectPropertiesActionFilterAttribute.OnPatch)} : {sut.OnPatch}");
+
+            DefaultHttpContext httpContext = new();
+            httpContext.Request.Method = method;
+            httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName, property.Item);
+            httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName, property.Item);
+
+            ActionContext actionContext = new(
+               httpContext,
+               new Mock<RouteData>().Object,
+               new Mock<ActionDescriptor>().Object,
+               new ModelStateDictionary());
+
+            ActionExecutingContext actionExecutingContext = new(actionContext,
+                                                                new List<IFilterMetadata>(),
+                                                                new Dictionary<string, object>(),
+                                                                new Mock<object>().Object);
+
+            // Act
+            sut.OnActionExecuting(actionExecutingContext);
+
+            // Assert
+            return (actionExecutingContext.Result is BadRequestObjectResult).Label($"{nameof(SelectPropertiesActionFilterAttribute.OnGet)} : {sut.OnGet}")
+                                                                     .When((sut.OnGet && IsGet(method))
+                                                                           || (sut.OnPost && IsPost(method))
+                                                                           || (sut.OnPut && IsPut(method))
+                                                                           || (sut.OnPatch && IsPatch(method)))
+                                                                     ;
+        }
+
+        [Property]
+        public void Given_both_http_headers_for_including_and_excluding_fields_are_specified_OnActionExecuted_should_throw_InvalidOperationException(bool onGet,
+                                                                                                                                                         bool onPost,
+                                                                                                                                                         bool onPut,
+                                                                                                                                                         bool onPatch,
+                                                                                                                                                         NonWhiteSpaceString property,
+                                                                                                                                                         object okObjectResultInnerValue)
+        {
+            // Arrange
+            Faker faker = new();
+            string method = faker.PickRandom(Get, Post, Put, Patch, Head, Connect, Delete, Options, Trace);
+            SelectPropertiesActionFilterAttribute sut = new(onGet, onPost, onPatch, onPut);
+
+            DefaultHttpContext httpContext = new();
+            httpContext.Request.Method = method;
+            httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName, property.Item);
+            httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName, property.Item);
+
+            ActionContext actionContext = new(
+               httpContext,
+               new Mock<RouteData>().Object,
+               new Mock<ActionDescriptor>().Object,
+               new ModelStateDictionary());
+
+            OkObjectResult okObjectResult = new(okObjectResultInnerValue);
+            ActionExecutedContext actionExecutedContext = new(actionContext,
+                                                              new List<IFilterMetadata>(),
+                                                              new Mock<object>())
+            {
+                Result = okObjectResult
+            };
+
+            // Act
+            Action onActionExecuted = () => sut.OnActionExecuted(actionExecutedContext);
+
+            // Assert
+            onActionExecuted.Should()
+                            .ThrowExactly<InvalidOperationException>();
         }
     }
 }
