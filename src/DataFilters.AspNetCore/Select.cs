@@ -4,8 +4,6 @@
 using Microsoft.Extensions.Primitives;
 #endif
 
-    using Microsoft.VisualBasic;
-
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -14,10 +12,10 @@ using Microsoft.Extensions.Primitives;
     /// <summary>
     /// Allows to define a <see cref="Select"/> expression
     /// </summary>
-    public class Select : IEquatable<Select>, IEqualityComparer<Select>
+    public sealed class Select : IEquatable<Select>, IEqualityComparer<Select>
     {
         /// <summary>
-        /// The string representation of <typeparamref name="T"/> properties to be selected
+        /// The string representation of properties to be selected.
         /// </summary>
         public string Expression { get; }
 

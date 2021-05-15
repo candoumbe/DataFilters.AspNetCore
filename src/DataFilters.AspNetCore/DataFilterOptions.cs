@@ -11,11 +11,6 @@ namespace DataFilters.AspNetCore
         private const int DefaultCacheSize = 1_000;
 
         /// <summary>
-        /// Default HTTP header name
-        /// </summary>
-        public const string DefaultHttpHeaderName = "x-datafilters-selection";
-
-        /// <summary>
         /// Defines how the IDataFilterService implementation will handle property names.
         /// </summary>
         /// <remarks>
@@ -50,7 +45,6 @@ namespace DataFilters.AspNetCore
         {
             MaxCacheSize = DefaultCacheSize;
             PropertyNameResolutionStrategy = PropertyNameResolutionStrategy.Default;
-            HeaderName = DefaultHttpHeaderName;
         }
 
         /// <summary>
