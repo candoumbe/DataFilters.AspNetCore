@@ -31,14 +31,6 @@ namespace DataFilters.AspNetCore
         public int MaxCacheSize { get; set; }
 
         /// <summary>
-        /// Sets the name of the header used to perform custom selection.
-        /// </summary>
-        /// <remarks>
-        /// By default the name of the HTTP Header is set to <c>x-datafilters-selection</c>.
-        /// </remarks>
-        public string HeaderName { get; set; }
-
-        /// <summary>
         /// Builds a new <see cref="DataFilterOptions"/> instance with default values for each property.
         /// </summary>
         public DataFilterOptions()

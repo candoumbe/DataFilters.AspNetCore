@@ -321,7 +321,9 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
                             break;
                     }
 
+#pragma warning disable S2583 // Conditionally executed code should be reachable
                 } while (string.IsNullOrWhiteSpace(featureName) && !exitCreatingFeature);
+#pragma warning restore S2583 // Conditionally executed code should be reachable
 
                 Info($"{EnvironmentInfo.NewLine}Good bye !");
             }
