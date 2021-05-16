@@ -1,12 +1,12 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-using Microsoft.Extensions.DependencyInjection;
-
-using System;
-
 namespace DataFilters.AspNetCore
 {
+    using Microsoft.Extensions.DependencyInjection;
+
+    using System;
+
     /// <summary>
     /// Extension methods to register services into the dependency injection
     /// </summary>

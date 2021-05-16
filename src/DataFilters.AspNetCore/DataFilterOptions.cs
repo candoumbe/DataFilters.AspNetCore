@@ -8,13 +8,7 @@ namespace DataFilters.AspNetCore
     /// </summary>
     public class DataFilterOptions
     {
-        private static readonly PropertyNameResolutionStrategy DefaultStrategy = PropertyNameResolutionStrategy.Default;
         private const int DefaultCacheSize = 1_000;
-
-        /// <summary>
-        /// Default HTTP header name
-        /// </summary>
-        public const string DefaultHttpHeaderName = "x-datafilters-selection";
 
         /// <summary>
         /// Defines how the IDataFilterService implementation will handle property names.
@@ -37,21 +31,12 @@ namespace DataFilters.AspNetCore
         public int MaxCacheSize { get; set; }
 
         /// <summary>
-        /// Sets the name of the header used to perform custom selection.
-        /// </summary>
-        /// <remarks>
-        /// By default the name of the HTTP Header is set to <c>x-datafilters-selection</c>.
-        /// </remarks>
-        public string HeaderName { get; set; }
-
-        /// <summary>
         /// Builds a new <see cref="DataFilterOptions"/> instance with default values for each property.
         /// </summary>
         public DataFilterOptions()
         {
             MaxCacheSize = DefaultCacheSize;
             PropertyNameResolutionStrategy = PropertyNameResolutionStrategy.Default;
-            HeaderName = DefaultHttpHeaderName;
         }
 
         /// <summary>
@@ -66,12 +51,12 @@ namespace DataFilters.AspNetCore
         ///     MaxCacheSize = -3,
         ///     Strategy = PropertyNameResolutionStrategy.CamelCase
         /// };
-        /// 
+        ///
         /// options.Validate();
         /// </code>
-        /// 
+        ///
         /// The last line will throw a <see cref="DataFiltersOptionsInvalidValueException"/> because <see cref="MaxCacheSize"/> must be a positive integer
-        /// 
+        ///
         /// </example>
         /// </remarks>
         /// <exception cref="DataFiltersOptionsInvalidValueException">when <see cref="MaxCacheSize"/>'s value is negative or zero</exception>
