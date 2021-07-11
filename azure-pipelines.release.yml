@@ -9,7 +9,7 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration AzurePipelines_pull-request --host AzurePipelines
+#         nuke --generate-configuration AzurePipelines_release --host AzurePipelines
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
@@ -17,13 +17,13 @@
 trigger:
   branches:
     include:
-      - feature/*
-      - hotfix/*
+      - release/*
   paths:
     exclude:
       - docs/*
       - README.md
       - CHANGELOG.md
+      - LICENCE
 
 stages:
   - stage: windows_latest
@@ -64,3 +64,19 @@ stages:
             inputs:
               artifactName: coverage-history
               pathtoPublish: 'output/coverage-history'
+      - job: Pack
+        displayName: 'Pack'
+        dependsOn: [ Tests, Compile ]
+        steps:
+          - task: Cache@2
+            inputs:
+              key: $(Agent.OS) | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS)
+              path: ~/.nuget/packages
+          - task: CmdLine@2
+            inputs:
+              script: './build.cmd Pack --skip'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: artifacts
+              pathtoPublish: 'output/artifacts'

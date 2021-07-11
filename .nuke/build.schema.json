@@ -8,7 +8,7 @@
       "properties": {
         "AutoStash": {
           "type": "boolean",
-          "description": "Indicates to automatically stash before switching branch"
+          "description": "Indicates if any changes should be stashed automatically prior to switching branch (Default : true)"
         },
         "Configuration": {
           "type": "string",
@@ -22,13 +22,9 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
-        "GitHubPackageSource": {
-          "type": "string",
-          "description": "URI of the Github packages repository default"
-        },
         "GitHubToken": {
           "type": "string",
-          "description": "Token used to interact with Github"
+          "default": "Secrets must be entered via 'nuke :secret [profile]'"
         },
         "Help": {
           "type": "boolean",
@@ -45,15 +41,22 @@
             "GitHubActions",
             "GitLab",
             "Jenkins",
+            "Rider",
             "SpaceAutomation",
             "TeamCity",
             "Terminal",
-            "TravisCI"
+            "TravisCI",
+            "VisualStudio",
+            "VSCode"
           ]
         },
         "Interactive": {
           "type": "boolean",
           "description": "Indicates wheter to restore nuget in interactive mode - Default is false"
+        },
+        "Name": {
+          "type": "string",
+          "description": "Generic name placeholder. Can be used wherever a name is required"
         },
         "NoLogo": {
           "type": "boolean",
@@ -61,11 +64,16 @@
         },
         "NugetApiKey": {
           "type": "string",
-          "description": "API key used to publish artifacts to Nuget.org"
+          "description": "API key used to publish artifacts to Nuget.org",
+          "default": "Secrets must be entered via 'nuke :secret [profile]'"
         },
         "NugetPackageSource": {
           "type": "string",
           "description": "URI where packages should be published (default : \"https://api.nuget.org/v3/index.json\""
+        },
+        "Partition": {
+          "type": "string",
+          "description": "Partition to use on CI"
         },
         "Plan": {
           "type": "boolean",
@@ -88,6 +96,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "AddGithubRelease",
               "Changelog",
               "Clean",
               "Compile",
@@ -111,6 +120,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "AddGithubRelease",
               "Changelog",
               "Clean",
               "Compile",
