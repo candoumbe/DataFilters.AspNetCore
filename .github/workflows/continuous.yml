@@ -45,15 +45,15 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
       - name: Run './build.cmd Tests Pack AddGithubRelease'
         run: ./build.cmd Tests Pack AddGithubRelease
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: tests-results
           path: output/tests-results
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: coverage-history
           path: output/coverage-history
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: artifacts
           path: output/artifacts
