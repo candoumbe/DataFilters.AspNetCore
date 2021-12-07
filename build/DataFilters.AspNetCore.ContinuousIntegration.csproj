@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="5.2.1" />
+    <PackageReference Include="Nuke.Common" Version="5.3.0" />
     <PackageReference Include="Candoumbe.Miscutilities" Version="0.6.3" />
     <PackageReference Include="ReportGenerator" Version="4.8.*" />
     <PackageReference Include="GitVersion.CommandLine" Version="5.5.1">
