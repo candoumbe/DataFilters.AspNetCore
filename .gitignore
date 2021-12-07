@@ -449,3 +449,4 @@ $RECYCLE.BIN/
 
 # Continuous integration output directory
 /output/
+/.nuke/temp
