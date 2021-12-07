@@ -14,7 +14,7 @@
     <PackageReference Include="Nuke.Common" Version="5.2.1" />
     <PackageReference Include="Candoumbe.Miscutilities" Version="0.6.3" />
     <PackageReference Include="ReportGenerator" Version="4.8.*" />
-    <PackageReference Include="GitVersion.CommandLine" Version="5.5.1">
+    <PackageReference Include="GitVersion.CommandLine" Version="5.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
