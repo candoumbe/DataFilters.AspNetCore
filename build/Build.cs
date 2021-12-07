@@ -59,55 +59,6 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
         "LICENSE"
         }
     )]
-    [AzurePipelines(
-        suffix: "release",
-        AzurePipelinesImage.WindowsLatest,
-        InvokedTargets = new[] { nameof(Pack) },
-        NonEntryTargets = new[] { nameof(Restore), nameof(Changelog) },
-        ExcludedTargets = new[] { nameof(Clean) },
-        PullRequestsAutoCancel = true,
-        TriggerBranchesInclude = new[] { ReleaseBranchPrefix + "/*" },
-        TriggerPathsExclude = new[]
-        {
-        "docs/*",
-        "README.md",
-        "CHANGELOG.md",
-        "LICENCE"
-        }
-    )]
-    [AzurePipelines(
-        suffix: "pull-request",
-        AzurePipelinesImage.WindowsLatest,
-        InvokedTargets = new[] { nameof(Tests) },
-        NonEntryTargets = new[] { nameof(Restore), nameof(Changelog) },
-        ExcludedTargets = new[] { nameof(Clean) },
-        PullRequestsAutoCancel = true,
-        PullRequestsBranchesInclude = new[] { MainBranchName },
-        TriggerBranchesInclude = new[] {
-        FeatureBranchPrefix + "/*",
-        HotfixBranchPrefix + "/*"
-        },
-        TriggerPathsExclude = new[]
-        {
-        "docs/*",
-        "README.md",
-        "CHANGELOG.md"
-        }
-    )]
-    [AzurePipelines(
-        AzurePipelinesImage.WindowsLatest,
-        InvokedTargets = new[] { nameof(Pack) },
-        NonEntryTargets = new[] { nameof(Restore), nameof(Changelog) },
-        ExcludedTargets = new[] { nameof(Clean) },
-        PullRequestsAutoCancel = true,
-        TriggerBranchesInclude = new[] { MainBranchName },
-        TriggerPathsExclude = new[]
-        {
-        "docs/*",
-        "README.md",
-        "CHANGELOG.md"
-        }
-    )]
     [CheckBuildProjectConfigurations]
     [UnsetVisualStudioEnvironmentVariables]
     [DotNetVerbosityMapping]
@@ -234,7 +185,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
                 .AddProperty("ExcludeByAttribute", "Obsolete")
                 .CombineWith(testsProjects, (cs, project) => cs.SetProjectFile(project)
                                                                .CombineWith(project.GetTargetFrameworks(), (setting, framework) => setting.SetFramework(framework)
-                                                                                                                                          .SetLogger($"trx;LogFileName={project.Name}.trx")
+                                                                                                                                          .AddLoggers($"trx;LogFileName={project.Name}.trx")
                                                                                                                                           .SetCoverletOutput(TestResultDirectory / $"{project.Name}.{framework}.xml")))
                 );
 
@@ -459,7 +410,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
         public bool IsOnGithub => GitHubActions is not null;
 
         public Target Publish => _ => _
-            .Description($"Published packages (*.nupkg and *.snupkg) to the destination server set with {nameof(NugetPackageSource)} settings ")
+            .Description($"Publish packages (*.nupkg and *.snupkg) to the destination server set with {nameof(NugetPackageSource)} settings ")
             .DependsOn(Tests, Pack)
             .Triggers(AddGithubRelease)
             .Consumes(Pack, ArtifactsDirectory / "*.nupkg", ArtifactsDirectory / "*.snupkg")
@@ -513,7 +464,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
                 {
                     Credentials = new Octokit.Credentials(GitHubToken)
                 };
-
+                
                 Octokit.NewRelease newRelease = new(MajorMinorPatchVersion)
                 {
                     TargetCommitish = GitRepository.Commit,
