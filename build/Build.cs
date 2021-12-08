@@ -193,7 +193,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
             .Executes(() =>
             {
                 DotNetBuild(s => s
-                    .SetNoRestore(InvokedTargets.Contains(Restore) || SkippedTargets.Contains(Restore))
+                    .SetNoRestore(SucceededTargets.Contains(Restore) || SkippedTargets.Contains(Restore))
                     .SetConfiguration(Configuration)
                     .SetProjectFile(Solution)
                     .SetAssemblyVersion(GitVersion.AssemblySemVer)
@@ -212,6 +212,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
             {
                 IEnumerable<Project> testsProjects = Solution.GetProjects("*.UnitTests");
 
+                Info($"{testsProjects.Count()} project(s) will be tested");
                 testsProjects.ForEach(project => Info(project));
 
                 DotNetTest(s => s
@@ -219,7 +220,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
                     .ResetVerbosity()
                     .EnableCollectCoverage()
                     .EnableUseSourceLink()
-                    .SetNoBuild(InvokedTargets.Contains(Compile))
+                    .SetNoBuild(SucceededTargets.Contains(Compile))
                     .SetResultsDirectory(TestResultDirectory)
                     .SetCoverletOutputFormat(CoverletOutputFormat.lcov)
                     .AddProperty("ExcludeByAttribute", "Obsolete")
@@ -273,8 +274,8 @@ using DataFilters.AspNetCore.ContinuousIntegration;
                     .EnableIncludeSource()
                     .EnableIncludeSymbols()
                     .SetOutputDirectory(ArtifactsDirectory)
-                    .SetNoBuild(InvokedTargets.Contains(Compile) || InvokedTargets.Contains(Tests))
-                    .SetNoRestore(InvokedTargets.Contains(Restore) || InvokedTargets.Contains(Compile) || InvokedTargets.Contains(Tests))
+                    .SetNoBuild(SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))
+                    .SetNoRestore(SucceededTargets.Contains(Restore) || SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))
                     .SetConfiguration(Configuration)
                     .SetAssemblyVersion(GitVersion.AssemblySemVer)
                     .SetFileVersion(GitVersion.AssemblySemFileVer)
