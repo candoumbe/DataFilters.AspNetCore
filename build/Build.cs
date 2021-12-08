@@ -103,7 +103,6 @@ using DataFilters.AspNetCore.ContinuousIntegration;
         [Required] [GitRepository] public readonly GitRepository GitRepository;
         [Required] [GitVersion(Framework = "net5.0")] public readonly GitVersion GitVersion;
 
-        [CI] public readonly AzurePipelines AzurePipelines;
         [CI] public readonly GitHubActions GitHubActions;
 
         [Partition(3)] public readonly Partition TestPartition;
@@ -211,8 +210,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
             .Triggers(ReportCoverage)
             .Executes(() =>
             {
-                IEnumerable<Project> projects = Solution.GetProjects("*.UnitTests");
-                IEnumerable<Project> testsProjects = TestPartition.GetCurrent(projects);
+                IEnumerable<Project> testsProjects = Solution.GetProjects("*.UnitTests");
 
                 testsProjects.ForEach(project => Info(project));
 
@@ -230,23 +228,12 @@ using DataFilters.AspNetCore.ContinuousIntegration;
                                                                                                                                               .AddLoggers($"trx;LogFileName={project.Name}.trx")
                                                                                                                                               .SetCoverletOutput(TestResultDirectory / $"{project.Name}.{framework}.xml")))
                     );
-
-                TestResultDirectory.GlobFiles("*.trx")
-                                        .ForEach(testFileResult => AzurePipelines?.PublishTestResults(type: AzurePipelinesTestResultsType.VSTest,
-                                                                                                        title: $"{Path.GetFileNameWithoutExtension(testFileResult)} ({AzurePipelines.StageDisplayName})",
-                                                                                                        files: new string[] { testFileResult })
-                        );
-
-                TestResultDirectory.GlobFiles("*.xml")
-                                .ForEach(file => AzurePipelines?.PublishCodeCoverage(coverageTool: AzurePipelinesCodeCoverageToolType.Cobertura,
-                                                                                        summaryFile: file,
-                                                                                        reportDirectory: CoverageReportDirectory));
             });
 
         public Target ReportCoverage => _ => _
             .DependsOn(Tests)
             .OnlyWhenDynamic(() => IsServerBuild || CodecovToken != null)
-            .Consumes(Tests, TestResultDirectory / "*.xml")
+            .Consumes(Tests, TestResultDirectory / "*.xml", TestResultDirectory / "*.trx")
             .Produces(CoverageReportDirectory / "*.xml")
             .Produces(CoverageReportHistoryDirectory / "*.xml")
             .Executes(() =>
