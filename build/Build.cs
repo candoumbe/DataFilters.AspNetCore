@@ -2,20 +2,19 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
 {
     using Nuke.Common;
     using Nuke.Common.CI;
-    using Nuke.Common.CI.AzurePipelines;
     using Nuke.Common.CI.GitHubActions;
     using Nuke.Common.Execution;
     using Nuke.Common.Git;
     using Nuke.Common.IO;
     using Nuke.Common.ProjectModel;
     using Nuke.Common.Tooling;
+    using Nuke.Common.Tools.Codecov;
     using Nuke.Common.Tools.Coverlet;
     using Nuke.Common.Tools.DotNet;
+    using Nuke.Common.Tools.GitReleaseManager;
     using Nuke.Common.Tools.GitVersion;
-    using Nuke.Common.Tools.Codecov;
     using Nuke.Common.Tools.ReportGenerator;
     using Nuke.Common.Utilities;
-    using Nuke.Common.Tools.GitReleaseManager;
 
     using System;
     using System.Collections.Generic;
@@ -26,15 +25,14 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
     using static Nuke.Common.IO.FileSystemTasks;
     using static Nuke.Common.IO.PathConstruction;
     using static Nuke.Common.Logger;
+    using static Nuke.Common.Tools.Codecov.CodecovTasks;
     using static Nuke.Common.Tools.DotNet.DotNetTasks;
     using static Nuke.Common.Tools.Git.GitTasks;
     using static Nuke.Common.Tools.GitVersion.GitVersionTasks;
     using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
-    using static Nuke.Common.Tools.Codecov.CodecovTasks;
-using DataFilters.AspNetCore.ContinuousIntegration;
 
     [GitHubActions(
-        "integration",
+        "continous",
         GitHubActionsImage.MacOsLatest,
         OnPushBranchesIgnore = new[] { MainBranchName },
         PublishArtifacts = true,
@@ -54,7 +52,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
         }
     )]
     [GitHubActions(
-        "delivery",
+        "deployment",
         GitHubActionsImage.MacOsLatest,
         OnPushBranches = new[] { MainBranchName, ReleaseBranchPrefix + "/*" },
         InvokedTargets = new[] { nameof(Tests), nameof(Publish), nameof(AddGithubRelease) },
