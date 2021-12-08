@@ -37,20 +37,6 @@
   </Choose>
 
   <!-- Set package references based on target framework -->
-  <Choose>
-    <When Condition="'$(TargetFramework)' == 'net5.0'">
-      <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="9.*" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-
-      <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="8.*" />
-      </ItemGroup>
-
-    </Otherwise>
-  </Choose>
 
   <Choose>
     <!-- Package to add for tests projects-->
@@ -65,6 +51,10 @@
 
   <ItemGroup>
     <PackageReference Include="Roslynator.Analyzers" Version="3.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.Csharp" Version="8.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
