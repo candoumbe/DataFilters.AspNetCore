@@ -224,7 +224,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
                     .AddProperty("ExcludeByAttribute", "Obsolete")
                     .CombineWith(testsProjects, (cs, project) => cs.SetProjectFile(project)
                                                                    .CombineWith(project.GetTargetFrameworks(), (setting, framework) => setting.SetFramework(framework)
-                                                                                                                                              .AddLoggers($"trx;LogFileName={project.Name}.trx")
+                                                                                                                                              .AddLoggers($"trx;LogFileName={project.Name}.{framework}.trx")
                                                                                                                                               .SetCoverletOutput(TestResultDirectory / $"{project.Name}.{framework}.xml")))
                     );
             });
