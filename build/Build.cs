@@ -32,7 +32,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
     using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
     [GitHubActions(
-        "continous",
+        "continuous",
         GitHubActionsImage.MacOsLatest,
         OnPushBranchesIgnore = new[] { MainBranchName },
         PublishArtifacts = true,
