@@ -2,20 +2,19 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
 {
     using Nuke.Common;
     using Nuke.Common.CI;
-    using Nuke.Common.CI.AzurePipelines;
     using Nuke.Common.CI.GitHubActions;
     using Nuke.Common.Execution;
     using Nuke.Common.Git;
     using Nuke.Common.IO;
     using Nuke.Common.ProjectModel;
     using Nuke.Common.Tooling;
+    using Nuke.Common.Tools.Codecov;
     using Nuke.Common.Tools.Coverlet;
     using Nuke.Common.Tools.DotNet;
+    using Nuke.Common.Tools.GitReleaseManager;
     using Nuke.Common.Tools.GitVersion;
-    using Nuke.Common.Tools.Codecov;
     using Nuke.Common.Tools.ReportGenerator;
     using Nuke.Common.Utilities;
-    using Nuke.Common.Tools.GitReleaseManager;
 
     using System;
     using System.Collections.Generic;
@@ -26,15 +25,14 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
     using static Nuke.Common.IO.FileSystemTasks;
     using static Nuke.Common.IO.PathConstruction;
     using static Nuke.Common.Logger;
+    using static Nuke.Common.Tools.Codecov.CodecovTasks;
     using static Nuke.Common.Tools.DotNet.DotNetTasks;
     using static Nuke.Common.Tools.Git.GitTasks;
     using static Nuke.Common.Tools.GitVersion.GitVersionTasks;
     using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
-    using static Nuke.Common.Tools.Codecov.CodecovTasks;
-using DataFilters.AspNetCore.ContinuousIntegration;
 
     [GitHubActions(
-        "integration",
+        "continuous",
         GitHubActionsImage.MacOsLatest,
         OnPushBranchesIgnore = new[] { MainBranchName },
         PublishArtifacts = true,
@@ -54,7 +52,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
         }
     )]
     [GitHubActions(
-        "delivery",
+        "deployment",
         GitHubActionsImage.MacOsLatest,
         OnPushBranches = new[] { MainBranchName, ReleaseBranchPrefix + "/*" },
         InvokedTargets = new[] { nameof(Tests), nameof(Publish), nameof(AddGithubRelease) },
@@ -103,7 +101,6 @@ using DataFilters.AspNetCore.ContinuousIntegration;
         [Required] [GitRepository] public readonly GitRepository GitRepository;
         [Required] [GitVersion(Framework = "net5.0")] public readonly GitVersion GitVersion;
 
-        [CI] public readonly AzurePipelines AzurePipelines;
         [CI] public readonly GitHubActions GitHubActions;
 
         [Partition(3)] public readonly Partition TestPartition;
@@ -194,7 +191,7 @@ using DataFilters.AspNetCore.ContinuousIntegration;
             .Executes(() =>
             {
                 DotNetBuild(s => s
-                    .SetNoRestore(InvokedTargets.Contains(Restore) || SkippedTargets.Contains(Restore))
+                    .SetNoRestore(SucceededTargets.Contains(Restore) || SkippedTargets.Contains(Restore))
                     .SetConfiguration(Configuration)
                     .SetProjectFile(Solution)
                     .SetAssemblyVersion(GitVersion.AssemblySemVer)
@@ -211,9 +208,9 @@ using DataFilters.AspNetCore.ContinuousIntegration;
             .Triggers(ReportCoverage)
             .Executes(() =>
             {
-                IEnumerable<Project> projects = Solution.GetProjects("*.UnitTests");
-                IEnumerable<Project> testsProjects = TestPartition.GetCurrent(projects);
+                IEnumerable<Project> testsProjects = Solution.GetProjects("*.UnitTests");
 
+                Info($"{testsProjects.Count()} project(s) will be tested");
                 testsProjects.ForEach(project => Info(project));
 
                 DotNetTest(s => s
@@ -221,32 +218,21 @@ using DataFilters.AspNetCore.ContinuousIntegration;
                     .ResetVerbosity()
                     .EnableCollectCoverage()
                     .EnableUseSourceLink()
-                    .SetNoBuild(InvokedTargets.Contains(Compile))
+                    .SetNoBuild(SucceededTargets.Contains(Compile))
                     .SetResultsDirectory(TestResultDirectory)
                     .SetCoverletOutputFormat(CoverletOutputFormat.lcov)
                     .AddProperty("ExcludeByAttribute", "Obsolete")
                     .CombineWith(testsProjects, (cs, project) => cs.SetProjectFile(project)
                                                                    .CombineWith(project.GetTargetFrameworks(), (setting, framework) => setting.SetFramework(framework)
-                                                                                                                                              .AddLoggers($"trx;LogFileName={project.Name}.trx")
+                                                                                                                                              .AddLoggers($"trx;LogFileName={project.Name}.{framework}.trx")
                                                                                                                                               .SetCoverletOutput(TestResultDirectory / $"{project.Name}.{framework}.xml")))
                     );
-
-                TestResultDirectory.GlobFiles("*.trx")
-                                        .ForEach(testFileResult => AzurePipelines?.PublishTestResults(type: AzurePipelinesTestResultsType.VSTest,
-                                                                                                        title: $"{Path.GetFileNameWithoutExtension(testFileResult)} ({AzurePipelines.StageDisplayName})",
-                                                                                                        files: new string[] { testFileResult })
-                        );
-
-                TestResultDirectory.GlobFiles("*.xml")
-                                .ForEach(file => AzurePipelines?.PublishCodeCoverage(coverageTool: AzurePipelinesCodeCoverageToolType.Cobertura,
-                                                                                        summaryFile: file,
-                                                                                        reportDirectory: CoverageReportDirectory));
             });
 
         public Target ReportCoverage => _ => _
             .DependsOn(Tests)
             .OnlyWhenDynamic(() => IsServerBuild || CodecovToken != null)
-            .Consumes(Tests, TestResultDirectory / "*.xml")
+            .Consumes(Tests, TestResultDirectory / "*.xml", TestResultDirectory / "*.trx")
             .Produces(CoverageReportDirectory / "*.xml")
             .Produces(CoverageReportHistoryDirectory / "*.xml")
             .Executes(() =>
@@ -286,8 +272,8 @@ using DataFilters.AspNetCore.ContinuousIntegration;
                     .EnableIncludeSource()
                     .EnableIncludeSymbols()
                     .SetOutputDirectory(ArtifactsDirectory)
-                    .SetNoBuild(InvokedTargets.Contains(Compile) || InvokedTargets.Contains(Tests))
-                    .SetNoRestore(InvokedTargets.Contains(Restore) || InvokedTargets.Contains(Compile) || InvokedTargets.Contains(Tests))
+                    .SetNoBuild(SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))
+                    .SetNoRestore(SucceededTargets.Contains(Restore) || SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))
                     .SetConfiguration(Configuration)
                     .SetAssemblyVersion(GitVersion.AssemblySemVer)
                     .SetFileVersion(GitVersion.AssemblySemFileVer)
