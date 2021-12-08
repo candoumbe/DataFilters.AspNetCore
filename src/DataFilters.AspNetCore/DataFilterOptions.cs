@@ -43,8 +43,10 @@ namespace DataFilters.AspNetCore
         /// Validates all properties
         /// </summary>
         /// <remarks>
-        /// This method should be called right after settings all properties.
+        /// This method should be called right after setting all properties.
+        /// <para>
         /// <example>
+        /// The last line will throw a <see cref="DataFiltersOptionsInvalidValueException"/> because <see cref="MaxCacheSize"/> must be a positive integer
         /// <code>
         /// DataFiltersOptions options = new ()
         /// {
@@ -54,10 +56,8 @@ namespace DataFilters.AspNetCore
         ///
         /// options.Validate();
         /// </code>
-        ///
-        /// The last line will throw a <see cref="DataFiltersOptionsInvalidValueException"/> because <see cref="MaxCacheSize"/> must be a positive integer
-        ///
         /// </example>
+        /// </para>
         /// </remarks>
         /// <exception cref="DataFiltersOptionsInvalidValueException">when <see cref="MaxCacheSize"/>'s value is negative or zero</exception>
         public void Validate()
