@@ -8,8 +8,16 @@ using System;
 namespace DataFilters.AspNetCore
 {
     /// <summary>
-    /// Default <see cref="IDataFilterService"/> implementation with a local L.R.U cache
+    /// <see cref="IDataFilterService"/> implementation with a local L.R.U cache.
     /// </summary>
+    /// <remarks>
+    /// This service can be used wherever you need to build an <see cref="IFilter"/> instance for a given input.
+    /// 
+    /// <example>
+    /// 
+    /// </example>
+    /// 
+    /// </remarks>
     public class DefaultDataFilterService : IDataFilterService
     {
         private readonly DataFilterOptions _options;

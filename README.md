@@ -2,8 +2,14 @@
 
 A small library that ease usage of [DataFilters][datafilters-nupkg] with ASP.NET Core APIs.
 
-# Why
-[DataFilters][datafilters-nupkg] allows to build complex queries in a "restfull" way.
+
+
+
+
+## Why
+
+### Make it easier to build `IFilter` instances
+[DataFilters][datafilters-nupkg] allows to build complex queries in a "restfull" way so 
 However, it comes with some drawbacks.
 
 In order to build a filter, you have to :
@@ -12,8 +18,23 @@ In order to build a filter, you have to :
 2. map it manually to the underlying model.
 2. converts it into an IFilter instance using the `ToFilter<T>` extension method.
 
-This can be a tedious task and I created this library to ease that process.
+This can be a tedious task and this library can help to ease that process.
 
+### Limit the bandwith usage
+The library adds support for two custom HTTP headers : `x-datafilters-fields-include` and `x-datafilters-fields-exclude`.
+
+#### `x-datafilters-fields-include`
+This HTTP header allows to specified which properties that will be kept in the body response.
+
+#### `x-datafilters-fields-exclude` 
+This custom allows to specified which properties that will be dropped from the body response.
+
+These custom headers can be handy for mobile clients that query a REST API by reducing the volume 
+of data transfered from backend. This can also allow to design one API that can serve multiple clients :
+each client could "select" the properties it want to display.
+
+### Improve performances
+The library caches `IFilter` instance created by the service.
 
 # <a href='#' id='how-to-install'>How to install</a>
 
@@ -23,7 +44,7 @@ This can be a tedious task and I created this library to ease that process.
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-   services.AddDataFilterService( options => 
+   services.AddDataFilterService(options => 
    {
          // configure DataFiltersOptions
    });

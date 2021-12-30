@@ -268,6 +268,7 @@ namespace DataFilters.ContinuousIntegration
                 DotNetPack(s => s
                     .EnableIncludeSource()
                     .EnableIncludeSymbols()
+                    .EnableIgnoreFailedSources()
                     .SetOutputDirectory(ArtifactsDirectory)
                     .SetNoBuild(SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))
                     .SetNoRestore(SucceededTargets.Contains(Restore) || SucceededTargets.Contains(Compile) || SucceededTargets.Contains(Tests))

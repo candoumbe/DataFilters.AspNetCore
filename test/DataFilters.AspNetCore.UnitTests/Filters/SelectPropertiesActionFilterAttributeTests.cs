@@ -170,9 +170,9 @@
             IActionResult result = actionExecutedContext.Result;
 
             IEnumerable<string> fieldNames = result.Should()
-                                         .BeAssignableTo<ObjectResult>().Which.Value.Should()
-                                         .BeAssignableTo<ExpandoObject>().Which
-                                         .Select(kv => kv.Key);
+                                                   .BeAssignableTo<ObjectResult>().Which.Value.Should()
+                                                   .BeAssignableTo<ExpandoObject>().Which
+                                                   .Select(kv => kv.Key);
 
             fieldNames.Should()
                       .Match(expectation, reason);

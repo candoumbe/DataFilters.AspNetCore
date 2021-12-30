@@ -10,7 +10,7 @@ using Microsoft.Extensions.Primitives;
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Allows to define a <see cref="Select"/> expression
+    /// Allows to define a <see cref="Select"/> expression.
     /// </summary>
     public sealed class Select : IEquatable<Select>, IEqualityComparer<Select>
     {
@@ -22,7 +22,8 @@ using Microsoft.Extensions.Primitives;
         /// <summary>
         /// Builds a new <see cref="Select"/> instance based on the provided <paramref name="expression"/>.
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="expression">The string representation of properties to be selected.</param>
+        /// <exception cref="ArgumentOutOfRangeException">if <paramref name="expression"/> is <c>null</c> or does not match <see cref="Constants.ValidFieldNamePattern"/> pattern</exception>
         public Select(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression))
