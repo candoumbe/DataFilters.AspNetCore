@@ -1,4 +1,4 @@
-namespace DataFilters.AspNetCore.ContinuousIntegration
+namespace DataFilters.ContinuousIntegration
 {
     using Nuke.Common;
     using Nuke.Common.CI;
@@ -30,6 +30,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
     using static Nuke.Common.Tools.Git.GitTasks;
     using static Nuke.Common.Tools.GitVersion.GitVersionTasks;
     using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
+    using DataFilters.AspNetCore.ContinuousIntegration;
 
     [GitHubActions(
         "continuous",
@@ -59,19 +60,15 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
         ImportGitHubTokenAs = nameof(GitHubToken),
         CacheKeyFiles = new[] { "global.json", "src/**/*.csproj" },
         PublishArtifacts = true,
-        ImportSecrets = new[]
-        {
-            nameof(NugetApiKey),
-            nameof(CodecovToken)
-        },
-        OnPullRequestExcludePaths = new[]
-        {
-            "docs/*",
-            "README.md",
-            "CHANGELOG.md",
-            "LICENSE"
+        ImportSecrets = new[] { nameof(NugetApiKey) },
+        OnPullRequestExcludePaths = new[] {
+        "docs/*",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE"
         }
     )]
+
     [CheckBuildProjectConfigurations]
     [UnsetVisualStudioEnvironmentVariables]
     [DotNetVerbosityMapping]
@@ -547,7 +544,7 @@ namespace DataFilters.AspNetCore.ContinuousIntegration
             .Executes(async () =>
             {
                 Info("Creating a new release");
-                Octokit.GitHubClient gitHubClient = new(new Octokit.ProductHeaderValue(nameof(DataFilters)))
+                Octokit.GitHubClient gitHubClient = new(new Octokit.ProductHeaderValue($"{nameof(DataFilters)}.{nameof(AspNetCore)}"))
                 {
                     Credentials = new Octokit.Credentials(GitHubToken)
                 };

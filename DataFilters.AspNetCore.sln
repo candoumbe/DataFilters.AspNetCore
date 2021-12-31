@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\deployment.yml = .github\workflows\deployment.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataFilters.AspNetCore.PerformanceTests", "test\DataFilters.AspNetCore.PerformanceTests\DataFilters.AspNetCore.PerformanceTests.csproj", "{2D5E5F63-395D-43B2-AE01-E8CEFF89C221}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{4DAC2B60-415C-4609-975C-083B5D6B86CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4350436-A0A3-400B-9608-817721E89099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4350436-A0A3-400B-9608-817721E89099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D5E5F63-395D-43B2-AE01-E8CEFF89C221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D5E5F63-395D-43B2-AE01-E8CEFF89C221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D5E5F63-395D-43B2-AE01-E8CEFF89C221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D5E5F63-395D-43B2-AE01-E8CEFF89C221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{542DA751-0594-47D0-8067-472E6A54C0B2} = {9DC1B24B-AFEA-423E-87CD-661A17D97F30}
 		{4DAC2B60-415C-4609-975C-083B5D6B86CF} = {53E8B477-3A9C-45ED-A789-ABD6862A2015}
 		{45DAE966-D824-4CE2-A9FA-09A6CE560897} = {A14D03BE-293A-4358-BE81-4C7B2A290CC5}
+		{2D5E5F63-395D-43B2-AE01-E8CEFF89C221} = {53E8B477-3A9C-45ED-A789-ABD6862A2015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {263E3EAF-0C9F-45C6-85E9-89F8CC530CEE}

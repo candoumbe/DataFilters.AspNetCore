@@ -241,11 +241,10 @@
             httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName, property.Item);
             httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName, property.Item);
 
-            ActionContext actionContext = new(
-               httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
-               new ModelStateDictionary());
+            ActionContext actionContext = new(httpContext,
+                                              new Mock<RouteData>().Object,
+                                              new Mock<ActionDescriptor>().Object,
+                                              new ModelStateDictionary());
 
             ActionExecutingContext actionExecutingContext = new(actionContext,
                                                                 new List<IFilterMetadata>(),
@@ -266,11 +265,11 @@
 
         [Property]
         public void Given_both_http_headers_for_including_and_excluding_fields_are_specified_OnActionExecuted_should_throw_InvalidOperationException(bool onGet,
-                                                                                                                                                         bool onPost,
-                                                                                                                                                         bool onPut,
-                                                                                                                                                         bool onPatch,
-                                                                                                                                                         NonWhiteSpaceString property,
-                                                                                                                                                         object okObjectResultInnerValue)
+                                                                                                                                                     bool onPost,
+                                                                                                                                                     bool onPut,
+                                                                                                                                                     bool onPatch,
+                                                                                                                                                     NonWhiteSpaceString property,
+                                                                                                                                                     object okObjectResultInnerValue)
         {
             // Arrange
             Faker faker = new();

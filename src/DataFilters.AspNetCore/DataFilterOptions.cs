@@ -4,7 +4,7 @@ namespace DataFilters.AspNetCore
     using DataFilters.Casing;
 
     /// <summary>
-    /// <see cref="DataFilterOptions"/> allows you to customize the behavior of <see cref="IDataFilterService"/>
+    /// <see cref="DataFilterOptions"/> allows to customize the behavior of <see cref="IDataFilterService"/>
     /// </summary>
     public class DataFilterOptions
     {
@@ -27,7 +27,6 @@ namespace DataFilters.AspNetCore
         /// <summary>
         /// Defines the number of elements to keep in the local cache
         /// </summary>
-        /// <remarks></remarks>
         public int MaxCacheSize { get; set; }
 
         /// <summary>

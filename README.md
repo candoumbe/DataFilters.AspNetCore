@@ -1,7 +1,18 @@
 #  DataFilters.AspNetCore <!-- omit in toc -->
 
+A small library that ease usage of [DataFilters][datafilters-nupkg] with ASP.NET Core APIs.
 
-A small library that ease usage of [DataFilters](https://nuget.org/packages/DataFilters) nuget package.
+# Why
+[DataFilters][datafilters-nupkg] allows to build complex queries in a "restfull" way.
+However, it comes with some drawbacks.
+
+In order to build a filter, you have to :
+
+1. parse the incoming string
+2. map it manually to the underlying model.
+2. converts it into an IFilter instance using the `ToFilter<T>` extension method.
+
+This can be a tedious task and I created this library to ease that process.
 
 
 # <a href='#' id='how-to-install'>How to install</a>
@@ -22,9 +33,10 @@ This will add [`IDataFilterService`](/src/DataFilters.AspNetCore/IDataFilterServ
 
 3. You can also opt in to use the custom HTTP headers by adding and instance of `SelectPropertiesActionFilterAttribute`
 ```csharp
-services.Filters
+services.Filters.Add(new SelectPropertyFilterAttribute());
 ```
 
+This will then enable usage of `x-datafilters-fields-include` and `x-datafilters-fields-exclude` HTTP headers
 
-4.  `x-datafilters-fields-include`
 
+[datafilters-nupkg]: https://nuget.org/packages/DataFilters
