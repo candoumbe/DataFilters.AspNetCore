@@ -19,9 +19,13 @@ namespace DataFilters.AspNetCore
         /// Builds a new <see cref="DefaultDataFilterService"/>
         /// </summary>
         /// <param name="options"></param>
+        /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
         public DefaultDataFilterService(DataFilterOptions options)
         {
-            _options = options;
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
             _cache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = options.MaxCacheSize });
         }
 
@@ -29,11 +33,13 @@ namespace DataFilters.AspNetCore
         public IFilter Compute<T>(string input)
         {
             string key = $"{typeof(T).FullName}_{input}";
+
             if (!_cache.TryGetValue(key, out IFilter filter))
             {
                 filter = input.ToFilter<T>();
-                _cache.Set(key, filter, new MemoryCacheEntryOptions { Priority = CacheItemPriority.Low, Size = 1 });
+                _cache.Set(key, input, new MemoryCacheEntryOptions { Priority = CacheItemPriority.Low, Size = 1 });
             }
+
             return filter;
         }
     }

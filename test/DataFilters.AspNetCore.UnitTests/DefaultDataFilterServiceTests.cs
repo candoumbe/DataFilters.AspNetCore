@@ -48,5 +48,16 @@ namespace DataFilters.AspNetCore.UnitTests
             actual.Should()
                   .Be(expected);
         }
+
+        [Fact]
+        public void Given_options_is_null_Constructor_should_throw_ArgumentNullException()
+        {
+            // Act
+            Action ctorWhereOptionsIsNull = () => new DefaultDataFilterService(null);
+
+            // Assert
+            ctorWhereOptionsIsNull.Should()
+                                  .ThrowExactly<ArgumentNullException>();
+        }
     }
 }
