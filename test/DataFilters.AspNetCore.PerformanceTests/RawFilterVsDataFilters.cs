@@ -4,6 +4,7 @@
 
     using System;
 
+    [MemoryDiagnoser]
     public class RawFilterVsDataFilters
     {
         private IDataFilterService _service;
@@ -21,7 +22,6 @@
         public IFilter WithoutCache() => Input.ToFilter<SuperHero>();
 
         [Benchmark]
-        public IFilter WithCache() => _service.Compute<SuperHero>(Input);
-        
+        public IFilter WithCache() => _service.Compute<SuperHero>(Input);   
     }
 }
