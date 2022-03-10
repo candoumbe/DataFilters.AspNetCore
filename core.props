@@ -45,7 +45,7 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="DataFilters" Version="0.10.0"/>
+        <PackageReference Include="DataFilters" Version="0.10.2"/>
         <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
       </ItemGroup>
     </Otherwise>
