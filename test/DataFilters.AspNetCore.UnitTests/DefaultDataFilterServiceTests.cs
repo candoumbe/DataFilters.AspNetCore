@@ -22,8 +22,8 @@ namespace DataFilters.AspNetCore.UnitTests
         public DefaultDataFilterServiceTests(ITestOutputHelper outputHelper)
         {
             _outputHelper = outputHelper;
-            _sut = new DefaultDataFilterService(new DataFilterOptions());
         }
+
 
         public static IEnumerable<object[]> ComputeCases
         {
@@ -32,17 +32,39 @@ namespace DataFilters.AspNetCore.UnitTests
                 yield return new object[]
                 {
                     "Nickname=Bat",
+                    new DataFilterOptions(),
                     new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat")
                 };
+                FilterLogic[] filterLogics = { FilterLogic.And, FilterLogic.Or };
+                foreach (FilterLogic logic in filterLogics)
+                {
+                    yield return new object[]
+                    {
+                        $"{nameof(SuperHero.Nickname)}=Bat&{nameof(SuperHero.Nickname)}=*Wonder*",
+                        new DataFilterOptions { FilterOptions = new FilterOptions() { Logic = logic } },
+                        new MultiFilter
+                        {
+                            Logic = logic,
+                            Filters = new[]
+                            {
+                                new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat"),
+                                new Filter("Nickname", @operator: FilterOperator.Contains, "Wonder"),
+                            }
+                        }
+                    };
+                }
             }
         }
 
         [Theory]
         [MemberData(nameof(ComputeCases))]
-        public void Given_input_Compute_should_build_expected_Filter(string input, IFilter expected)
+        public void Given_input_and_options_Compute_should_build_expected_Filter_instance(string input, DataFilterOptions options, IFilter expected)
         {
+            // Arrange
+            DefaultDataFilterService sut = new(options);
+
             // Act
-            IFilter actual = _sut.Compute<SuperHero>(input);
+            IFilter actual = sut.Compute<SuperHero>(input);
 
             // Assert
             actual.Should()

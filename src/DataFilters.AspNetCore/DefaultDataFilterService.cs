@@ -34,6 +34,7 @@ namespace DataFilters.AspNetCore
             {
                 throw new ArgumentNullException(nameof(options));
             }
+            _options = options;
             _cache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = options.MaxCacheSize });
         }
 
@@ -44,7 +45,7 @@ namespace DataFilters.AspNetCore
 
             if (!_cache.TryGetValue(key, out IFilter filter))
             {
-                filter = input.ToFilter<T>();
+                filter = input.ToFilter<T>(_options.FilterOptions);
                 _cache.Set(key, input, new MemoryCacheEntryOptions { Priority = CacheItemPriority.Low, Size = 1 });
             }
 
