@@ -11,12 +11,43 @@ namespace DataFilters.AspNetCore
     /// <see cref="IDataFilterService"/> implementation with a local L.R.U cache.
     /// </summary>
     /// <remarks>
-    /// This service can be used wherever you need to build an <see cref="IFilter"/> instance for a given input.
-    /// 
+    /// This service can be used wherever you need to build an <see cref="IFilter"/> instance for a given input as follow :
+    /// <para>
     /// <example>
-    /// 
+    /// 1. Define the <see cref="DataFilterOptions"/> to use when building <see cref="IFilter"/> instances.
+    /// <code>
+    /// DataFilterOptions options = new ()
+    /// {
+    ///     MaxCacheSize = 50,
+    ///     FilterOptions = new ()
+    ///     {
+    ///         DefaultPropertyNameStrategyResolutionStrategy = PropertyNameResolutionStrategy.SnakeCase,
+    ///         Logic = FilterLogic.And
+    ///     }
+    /// };
+    /// </code>
     /// </example>
-    /// 
+    /// </para>
+    /// <para>
+    /// <example>
+    /// 2. Create a <see cref="DefaultDataFilterService"/> instance with the <see cref="DataFilterOptions"/>.
+    /// <code>
+    /// IDataFilterService service = new(options);
+    /// </code>
+    /// </example>
+    /// </para>
+    ///
+    /// <para>
+    /// <example>
+    /// 3. The service can now be used to create <see cref="IFilter"/>s.
+    ///
+    /// <code>
+    /// string query = "Firstname=B*&amp;Lastname=Wayne";
+    ///
+    /// IFilter filter = service.Compute&lt;Person&gt;(query);
+    /// </code>
+    /// </example>
+    /// </para>
     /// </remarks>
     public class DefaultDataFilterService : IDataFilterService
     {
