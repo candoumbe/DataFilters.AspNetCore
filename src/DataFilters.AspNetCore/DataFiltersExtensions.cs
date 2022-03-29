@@ -23,8 +23,6 @@ namespace DataFilters.AspNetCore
 
             configureOptions?.Invoke(options);
 
-            options.Validate();
-
             services.AddSingleton<IDataFilterService>(new DefaultDataFilterService(options));
 
             return services;

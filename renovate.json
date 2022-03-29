@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "automerge": true,
+  "addLabels": [ "renovate-bot", "dependencies" ],
+  "additionalReviewers": [ "candoumbe" ],
+  "dependencyDashboardAutoclose": true,
+  "assignAutomerge": true,
+  "assigneesFromCodeOwners": true,
+  "commitBodyTable": true,
+  "major": {
+    "automerge": false
+  }
+}

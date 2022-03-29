@@ -51,24 +51,5 @@ namespace DataFilters.AspNetCore.UnitTests
                                           Times.Once);
             _serviceCollectionMock.VerifyNoOtherCalls();
         }
-
-        [Property(Arbitrary = new[] { typeof(Generators) })]
-        public void Given_invalid_configuration_AddDataFilterService_should_throw_DataFilterInvalidOperationException(NonNegativeInt maxCacheSize,
-                                                                                                                      PropertyNameResolutionStrategy strategy)
-        {
-            // Arrange
-            Action<DataFilterOptions> configureOptions = (options) =>
-            {
-                options.PropertyNameResolutionStrategy = strategy;
-                options.MaxCacheSize = -maxCacheSize.Item;
-            };
-
-            // Act
-            Action configuringOptionsWithinvalidValues = () => _serviceCollectionMock.Object.AddDataFilters(configureOptions);
-
-            // Assert
-            configuringOptionsWithinvalidValues.Should()
-                                               .ThrowExactly<DataFiltersOptionsInvalidValueException>();
-        }
     }
 }
