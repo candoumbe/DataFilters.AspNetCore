@@ -24,8 +24,8 @@ public class MinimalAttributeTests
         // Assert
         AttributeUsageAttribute attr = minimalAttribute.Should()
                                                        .BeDecoratedWith<AttributeUsageAttribute>().Which;
-        attr.AllowMultiple.Should().BeFalse();
-        attr.Inherited.Should().BeFalse();
+        attr.AllowMultiple.Should().BeFalse("The attribute cannot be applied multiple times on the same property/field");
+        attr.Inherited.Should().BeTrue();
         attr.ValidOn.Should()
                     .Be(AttributeTargets.Property);
     }

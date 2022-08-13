@@ -10,9 +10,6 @@ namespace DataFilters.AspNetCore
     {
         private const int DefaultCacheSize = 1_000;
 
-
-        private PropertyNameResolutionStrategy _strategy;
-
         /// <summary>
         /// Defines the number of elements to keep in the local cache
         /// </summary>

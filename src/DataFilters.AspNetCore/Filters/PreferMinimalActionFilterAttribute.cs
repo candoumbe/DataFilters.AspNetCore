@@ -17,7 +17,7 @@ using static Microsoft.AspNetCore.Http.HttpMethods;
 
 
 /// <summary>
-/// This action filter implementation handles the HTTP <c>Prefer</c> header
+/// This action filter implementation, in conjunction with <see cref="MinimalAttribute"/>, handles the HTTP <see href="https://httpwg.org/specs/rfc7240.html#return">Prefer</see> header
 /// </summary>
 public class PreferMinimalActionFilterAttribute : ActionFilterAttribute
 {
