@@ -12,12 +12,8 @@ namespace DataFilters.AspNetCore.UnitTests
     using static Moq.MockBehavior;
     using static Moq.It;
     using Xunit;
-    using FsCheck.Xunit;
-    using FsCheck;
     using System;
-    using DataFilters.Casing;
     using Microsoft.AspNetCore.Builder;
-    using FluentAssertions;
 
     [UnitTest]
     public class DataFiltersExtensionsTests
