@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.0] / 2022-08-14
 - Added [`MinimalAttribute`](/src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs) to support `Prefer: return=minimal` HTTP header ([#47](https://github.com/candoumbe/DataFilters.AspNetCore/issues/47)) 
 
 ## [0.2.0] / 2022-03-29
@@ -17,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] / 2021-05-16
 - Initial release
 
-[Unreleased]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/candoumbe/DataFilters.AspNetCore/tree/0.1.0
 
