@@ -1,5 +1,5 @@
 ﻿[![GitHub Workflow Status (main)](https://img.shields.io/github/workflow/status/candoumbe/datafilters.aspnetcore/deployment/main?label=main)](https://github.com/candoumbe/DataFilters.AspNetCore/actions/workflows/deployment.yml)
-[![GitHub Workflow Status (develop)](https://img.shields.io/github/workflow/status/candoumbe/datafilters.aspnetcore/integration/develop?label=develop)](https://github.com/candoumbe/DataFilters.AspNetCore/actions/workflows/continous.yml)
+[![GitHub Workflow Status (develop)](https://img.shields.io/github/workflow/status/candoumbe/datafilters.aspnetcore/continuous/develop?label=develop)](https://github.com/candoumbe/DataFilters.AspNetCore/actions/workflows/continuous.yml)
 [![codecov](https://codecov.io/gh/candoumbe/DataFilters.aspnetcore/branch/develop/graph/badge.svg?token=FHSC41A4X3)](https://codecov.io/gh/candoumbe/DataFilters.aspnetcore)
 [![GitHub raw issues](https://img.shields.io/github/issues-raw/candoumbe/datafilters.aspnetcore)](https://github.com/candoumbe/datafilters.aspnetcore/issues)
 [![Nuget](https://img.shields.io/nuget/vpre/datafilters.aspnetcore)](https://nuget.org/packages/datafilters)
