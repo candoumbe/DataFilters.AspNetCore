@@ -70,13 +70,13 @@ namespace DataFilters.AspNetCore
         }
 
         ///<inheritdoc/>
-        public IFilter Compute<T>(string input)
+        public IFilter Compute<T>(string input, FilterOptions filterComputationOptions = null)
         {
             string key = $"{typeof(T).FullName}_{input}";
 
             if (!_cache.TryGetValue(key, out IFilter filter))
             {
-                filter = input.ToFilter<T>(_options.FilterOptions);
+                filter = input.ToFilter<T>(filterComputationOptions ?? _options.FilterOptions);
                 _cache.Set(key, input, new MemoryCacheEntryOptions { Priority = CacheItemPriority.Low, Size = 1 });
             }
 

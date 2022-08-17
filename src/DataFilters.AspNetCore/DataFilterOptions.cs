@@ -6,14 +6,21 @@ namespace DataFilters.AspNetCore
     /// <summary>
     /// <see cref="DataFilterOptions"/> allows to customize the behavior of <see cref="IDataFilterService"/>
     /// </summary>
+#if NET6_0_OR_GREATER
+    public record DataFilterOptions
+#else
     public class DataFilterOptions
+#endif
     {
-        private const int DefaultCacheSize = 1_000;
+        private const long DefaultCacheSize = 1_000;
 
         /// <summary>
         /// Defines the number of elements to keep in the local cache
         /// </summary>
-        public int MaxCacheSize { get; set; }
+        /// <remarks>
+        /// Setting this to a negative value means no cache will be used
+        /// </remarks>
+        public long MaxCacheSize { get; set; }
 
         /// <summary>
         /// Default options to use when computing <see cref="IFilter"/> instances.
@@ -32,7 +39,7 @@ namespace DataFilters.AspNetCore
         private FilterOptions _filterOptions;
 
         /// <summary>
-        /// Builds a new <see cref="DataFilterOptions"/> instance with default values for each property.
+        /// Builds a new <see cref="DataFilterOptions"/> instance using the <see cref="DefaultCacheSize"/>.
         /// </summary>
         public DataFilterOptions()
         {

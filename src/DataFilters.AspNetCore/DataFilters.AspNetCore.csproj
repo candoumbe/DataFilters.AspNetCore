@@ -13,17 +13,17 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DataFilters.AspNetCore.Attributes\DataFilters.AspNetCore.Attributes.csproj" />
+  </ItemGroup>
+
   <Choose>
     <When Condition="'$(TargetFramework)' == 'net6.0'">
       <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
 
 </Project>

@@ -28,7 +28,7 @@ namespace DataFilters.AspNetCore.UnitTests
         }
 
         /// <summary>
-        /// Tests for <see cref="DataFiltersExtensions.AddDataFilters(IServiceCollection, Action{DataFilterOptions})"/>
+        /// Tests for <see cref="ServiceCollectionExtensions.AddDataFilters(IServiceCollection, Action{DataFilterOptions})"/>
         /// </summary>
         [Fact]
         public void Given_no_configuration_AddDataFilterService_should_add_instance_with_default_options()

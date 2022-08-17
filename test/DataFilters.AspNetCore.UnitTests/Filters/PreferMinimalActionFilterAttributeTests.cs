@@ -1,6 +1,5 @@
 ﻿namespace DataFilters.AspNetCore.UnitTests.Filters
 {
-
     using DataFilters.AspNetCore.Attributes;
     using DataFilters.AspNetCore.Filters;
 
