@@ -60,7 +60,7 @@ GET /api/users HTTP/1.1
 Prefer: return=minimal
 ```
 
-and the following C# class where the [`MinimalAttribute`](/src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs)
+and the following C# class where the [`MinimalAttribute`][cls-attrs-minimal]
 is applied to both `Name` and `Id` properties :
 
 
@@ -94,10 +94,12 @@ HTTP/1.1 200 OK
 ]
 ```
 
-Only properties marked with the [`MinimalAttribute`](/src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs) are returned.
-
-💡 <strong> Usage of the `MinimalAttribute` automatically triggers support of the `Prefer` HTTP header.</strong>
-
+To enable support of the `Prefer: return=minimal` HTTP header :
+1. Register an instance of [`PreferActionFilterAttribute`][cls-filters-prefer] in your filters
+```csharp
+services.Filters.Add(new PrefiPropertyFilterAttribute());
+```
+2. Annotate properties in your classes with [MinimalAttribute][cls-attrs-minimal].
 
 ### Improve performances
 The library comes with a [`IDataFilterService`](/src/DataFilters.AspNetCore/IDataFilterService.cs)  that can be used to build caches `IFilter` instances created by the service.
@@ -105,27 +107,10 @@ The library comes with a [`IDataFilterService`](/src/DataFilters.AspNetCore/IDat
 
 ## <a href='#' id='how-to-install'>How to install</a>
 
-1. run `dotnet install DataFilters.AspNetCore` to add the package to your solution
-2. add the following line to your Startup.cs file
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-   services.AddDataFilterService(options => 
-   {
-         // configure DataFiltersOptions
-   });
-}
-```
-This will add [`IDataFilterService`](/src/DataFilters.AspNetCore/IDataFilterService.cs) as a singleton to the dependency injection container.
-
-3. You can also opt in to use the custom HTTP headers by adding and instance of `SelectPropertiesActionFilterAttribute`
-```csharp
-services.Filters.Add(new SelectPropertyFilterAttribute());
-```
-
-
-This will then enable usage of `x-datafilters-fields-include` and `x-datafilters-fields-exclude` HTTP headers
+1. Simply run `dotnet install DataFilters.AspNetCore` to add the package to your solution
+2. You're ready to go
 
 
 [datafilters-nupkg]: https://nuget.org/packages/DataFilters
+[cls-attrs-minimal]: /src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs
+[cls-filters-select]: /src/DataFilters.AspNetCore/Filters/SelectPropertyFilterAttribute.cs
