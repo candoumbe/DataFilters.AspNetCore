@@ -30,10 +30,10 @@ using static Microsoft.AspNetCore.Http.HttpMethods;
 ///     <item>the action returned an <see cref="OkObjectResult"/>. </item>
 ///     <item> at least one of the following conditions are met :
 ///         <list type="bullet">
-///             <item><see cref="OnGet"/> is <c>true</c> and the <see cref="IsGet(string)"/> returns <c>true</c> for the HTTP method of the incoming request.</item>
-///             <item><see cref="OnPost"/> is <c>true</c> and the <see cref="IsPost(string)"/> returns <c>true</c> for the HTTP method of the incoming request</item>
-///             <item><see cref="OnPatch"/> is <c>true</c> and the <see cref="IsPatch(string)"/> returns <c>true</c> for the HTTP method of the incoming request</item>
-///             <item><see cref="OnPut"/> is <c>true</c> and the incoming request's method is 'P'</item>
+///             <item><see cref="OnGet"/> is <see langword="true"/> and <see cref="IsGet(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request.</item>
+///             <item><see cref="OnPost"/> is <see langword="true"/> and <see cref="IsPost(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request</item>
+///             <item><see cref="OnPatch"/> is <see langword="true"/> and <see cref="IsPatch(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request</item>
+///             <item><see cref="OnPut"/> is <see langword="true"/> and <see cref="IsPut(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request</item>
 ///         </list>
 ///     </item>
 /// </list>
@@ -148,7 +148,7 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
     /// Checks if the current filter should activate itself
     /// </summary>
     /// <param name="method">HTTP method</param>
-    /// <returns><c>true</c> if the attribute should run and <c>false</c> otherwise.</returns>
+    /// <returns><see langword="true"/> if the attribute should run and <see langword="false"/> otherwise.</returns>
     private bool ShouldActivate(string method) => (OnGet && IsGet(method))
                                                     || (OnPost && IsPost(method))
                                                     || (OnPatch && IsPatch(method))

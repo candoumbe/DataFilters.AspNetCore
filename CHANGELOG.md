@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Moved `MinimalAttribute` to a dedicated [`DataFilters.AspNetCore.Attributes`](https://nuget.org/packages/DataFilters.AspNetCore.Attributes) nuget package
+- Added `IDataFilterService.Compute<T>(string, FilterOptions)` overload
+
 ## [0.3.0] / 2022-08-14
-- Added [`MinimalAttribute`](/src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs) to support `Prefer: return=minimal` HTTP header ([#47](https://github.com/candoumbe/DataFilters.AspNetCore/issues/47)) 
+- Added `MinimalAttribute` to support `Prefer: return=minimal` HTTP header ([#47](https://github.com/candoumbe/DataFilters.AspNetCore/issues/47)) 
 
 ## [0.2.0] / 2022-03-29
 - Bumped [`Candoumbe.MiscUtilities`](https://nuget.org/packages/Candoumbe.MiscUtilities) to [`0.6.3`](https://nuget.org/packages/Candoumbe.DataFilters/0.8.0)
