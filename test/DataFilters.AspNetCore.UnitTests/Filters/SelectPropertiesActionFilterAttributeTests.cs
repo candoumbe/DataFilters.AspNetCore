@@ -16,9 +16,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Primitives;
-
-    using Moq;
-
+    using NSubstitute;
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
@@ -150,13 +148,13 @@
 
             ActionContext actionContext = new(
                httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
                new ModelStateDictionary());
 
             ActionExecutedContext actionExecutedContext = new(actionContext,
                                                               new List<IFilterMetadata>(),
-                                                              new Mock<object>())
+                                                              Substitute.For<object>())
             {
                 Result = new OkObjectResult(okResultValue)
             };
@@ -187,8 +185,8 @@
 
             ActionContext actionContext = new(
                httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
                new ModelStateDictionary());
 
             OkObjectResult okObjectResult = new(new
@@ -202,7 +200,7 @@
             });
             ActionExecutedContext actionExecutedContext = new(actionContext,
                                                               new List<IFilterMetadata>(),
-                                                              new Mock<object>())
+                                                              Substitute.For<object>())
             {
                 Result = okObjectResult
             };
@@ -242,14 +240,14 @@
             httpContext.Request.Headers.Add(SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName, property.Item);
 
             ActionContext actionContext = new(httpContext,
-                                              new Mock<RouteData>().Object,
-                                              new Mock<ActionDescriptor>().Object,
+                                              Substitute.For<RouteData>(),
+                                              Substitute.For<ActionDescriptor>(),
                                               new ModelStateDictionary());
 
             ActionExecutingContext actionExecutingContext = new(actionContext,
                                                                 new List<IFilterMetadata>(),
                                                                 new Dictionary<string, object>(),
-                                                                new Mock<object>().Object);
+                                                                Substitute.For<object>());
 
             // Act
             sut.OnActionExecuting(actionExecutingContext);
@@ -283,14 +281,14 @@
 
             ActionContext actionContext = new(
                httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
                new ModelStateDictionary());
 
             OkObjectResult okObjectResult = new(okObjectResultInnerValue);
             ActionExecutedContext actionExecutedContext = new(actionContext,
                                                               new List<IFilterMetadata>(),
-                                                              new Mock<object>())
+                                                              Substitute.For<object>())
             {
                 Result = okObjectResult
             };

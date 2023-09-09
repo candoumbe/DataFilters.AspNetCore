@@ -5,26 +5,20 @@ namespace DataFilters.AspNetCore.UnitTests
 {
     using Microsoft.Extensions.DependencyInjection;
 
-    using Moq;
-
     using Xunit.Categories;
 
-    using static Moq.MockBehavior;
-    using static Moq.It;
     using Xunit;
     using System;
     using Microsoft.AspNetCore.Builder;
+    using NSubstitute;
 
     [UnitTest]
     public class DataFiltersExtensionsTests
     {
-        private readonly Mock<IServiceCollection> _serviceCollectionMock;
-        private readonly Mock<IApplicationBuilder> _applicationBuilderMock;
-
+        private readonly IServiceCollection _serviceCollectionMock;
         public DataFiltersExtensionsTests()
         {
-            _serviceCollectionMock = new(Strict);
-            _applicationBuilderMock = new(Strict);
+            _serviceCollectionMock = Substitute.For<IServiceCollection>();
         }
 
         /// <summary>
@@ -34,18 +28,15 @@ namespace DataFilters.AspNetCore.UnitTests
         public void Given_no_configuration_AddDataFilterService_should_add_instance_with_default_options()
         {
             // Arrange
-            _serviceCollectionMock.Setup(mock => mock.Add(IsAny<ServiceDescriptor>()));
 
             // Act
-            _serviceCollectionMock.Object.AddDataFilters();
+            _serviceCollectionMock.AddDataFilters();
 
             // Assert
-            _serviceCollectionMock.Verify(mock => mock.Add(IsAny<ServiceDescriptor>()), Times.Once);
-            _serviceCollectionMock.Verify(mock => mock.Add(Is<ServiceDescriptor>(sd => sd.ServiceType == typeof(IDataFilterService)
-                                                                                       && sd.Lifetime == ServiceLifetime.Singleton
-                                                                                       && sd.ImplementationInstance != null)),
-                                          Times.Once);
-            _serviceCollectionMock.VerifyNoOtherCalls();
+            _serviceCollectionMock.Received(1).Add(Arg.Any<ServiceDescriptor>());
+            _serviceCollectionMock.Received(1).Add(Arg.Is<ServiceDescriptor>(sd => sd.ServiceType == typeof(IDataFilterService)
+                                                                                   && sd.Lifetime == ServiceLifetime.Singleton
+                                                                                   && sd.ImplementationInstance != null));
         }
     }
 }
