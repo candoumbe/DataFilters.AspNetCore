@@ -3,7 +3,6 @@
 
 namespace DataFilters.AspNetCore.UnitTests
 {
-
     using FsCheck;
     using FsCheck.Xunit;
 
