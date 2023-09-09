@@ -14,7 +14,7 @@ namespace DataFilters.ContinuousIntegration
 
     [GitHubActions(
         "continuous",
-        GitHubActionsImage.MacOsLatest,
+        GitHubActionsImage.UbuntuLatest,
         OnPushBranchesIgnore = new[] { nameof(IGitFlow.MainBranchName) },
         PublishArtifacts = true,
         InvokedTargets = new[] { nameof(IUnitTest.UnitTests), nameof(IReportCoverage.ReportCoverage), nameof(IPack.Pack) },
@@ -34,7 +34,7 @@ namespace DataFilters.ContinuousIntegration
     )]
     [GitHubActions(
         "deployment",
-        GitHubActionsImage.MacOsLatest,
+        GitHubActionsImage.UbuntuLatest,
         OnPushBranches = new[] { nameof(IGitFlow.MainBranchName), nameof(IGitFlow.ReleaseBranchPrefix) + "/*" },
         InvokedTargets = new[] { nameof(IUnitTest.UnitTests), nameof(IPushNugetPackages.Publish), nameof(ICreateGithubRelease.AddGithubRelease) },
         EnableGitHubToken = true,
