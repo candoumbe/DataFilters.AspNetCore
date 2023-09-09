@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Build Schema",
   "$ref": "#/definitions/build",
+  "title": "Build Schema",
   "definitions": {
     "build": {
       "type": "object",
@@ -12,11 +12,16 @@
         },
         "CodecovToken": {
           "type": "string",
-          "default": "Secrets must be entered via 'nuke :secret [profile]'"
+          "description": "The API key used to push code coverage to CodeCov",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
+        },
+        "ConfigName": {
+          "type": "string",
+          "description": "Defines the name of the configuration to use to publish packages"
         },
         "Configuration": {
           "type": "string",
-          "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
+          "description": "Defines the configuratoin to use when building the application",
           "enum": [
             "Debug",
             "Release"
@@ -28,7 +33,8 @@
         },
         "GitHubToken": {
           "type": "string",
-          "default": "Secrets must be entered via 'nuke :secret [profile]'"
+          "description": "Token used to create a new release in GitHub",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "Help": {
           "type": "boolean",
@@ -41,6 +47,7 @@
             "AppVeyor",
             "AzurePipelines",
             "Bamboo",
+            "Bitbucket",
             "Bitrise",
             "GitHubActions",
             "GitLab",
@@ -54,13 +61,17 @@
             "VSCode"
           ]
         },
-        "Interactive": {
+        "IgnoreFailedSources": {
           "type": "boolean",
-          "description": "Indicates wheter to restore nuget in interactive mode - Default is false"
+          "description": "Ignore unreachable sources during Restore"
+        },
+        "Major": {
+          "type": "boolean",
+          "description": "Hint to create a major release"
         },
         "Name": {
           "type": "string",
-          "description": "Generic name placeholder. Can be used wherever a name is required"
+          "description": "Name of the branch to create"
         },
         "NoLogo": {
           "type": "boolean",
@@ -68,12 +79,7 @@
         },
         "NugetApiKey": {
           "type": "string",
-          "description": "API key used to publish artifacts to Nuget.org",
-          "default": "Secrets must be entered via 'nuke :secret [profile]'"
-        },
-        "NugetPackageSource": {
-          "type": "string",
-          "description": "URI where packages should be published (default : \"https://api.nuget.org/v3/index.json\""
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "Partition": {
           "type": "string",
@@ -84,11 +90,8 @@
           "description": "Shows the execution plan (HTML)"
         },
         "Profile": {
-          "type": "array",
-          "description": "Defines the profiles to load",
-          "items": {
-            "type": "string"
-          }
+          "type": "string",
+          "description": "Name of the profile where the current set of secrets"
         },
         "Root": {
           "type": "string",
@@ -101,19 +104,19 @@
             "type": "string",
             "enum": [
               "AddGithubRelease",
-              "Benchmarks",
               "Changelog",
               "Clean",
               "Coldfix",
               "Compile",
               "Feature",
               "Hotfix",
+              "ManageSecrets",
               "Pack",
               "Publish",
               "Release",
               "ReportCoverage",
               "Restore",
-              "Tests"
+              "UnitTests"
             ]
           }
         },
@@ -128,24 +131,21 @@
             "type": "string",
             "enum": [
               "AddGithubRelease",
-              "Benchmarks",
               "Changelog",
               "Clean",
               "Coldfix",
               "Compile",
               "Feature",
               "Hotfix",
+              "ManageSecrets",
               "Pack",
               "Publish",
               "Release",
               "ReportCoverage",
               "Restore",
-              "Tests"
+              "UnitTests"
             ]
           }
-        },
-        "TestPartition": {
-          "type": "string"
         },
         "Verbosity": {
           "type": "string",

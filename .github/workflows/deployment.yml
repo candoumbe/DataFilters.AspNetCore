@@ -19,8 +19,8 @@ name: deployment
 on:
   push:
     branches:
-      - main
-      - 'release/*'
+      - MainBranchName
+      - 'ReleaseBranchPrefix/*'
   pull_request:
     paths:
       - '!docs/*'
@@ -29,36 +29,40 @@ on:
       - '!LICENSE'
 
 jobs:
-  macOS-latest:
-    name: macOS-latest
-    runs-on: macOS-latest
+  macos-latest:
+    name: macos-latest
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Cache .nuke/temp, ~/.nuget/packages
-        uses: actions/cache@v2
+      - uses: actions/checkout@v3
+      - name: 'Cache: .nuke/temp, ~/.nuget/packages'
+        uses: actions/cache@v3
         with:
           path: |
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('global.json', 'src/**/*.csproj') }}
-      - name: Run './build.cmd Tests Publish AddGithubRelease'
-        run: ./build.cmd Tests Publish AddGithubRelease
+      - name: 'Run: UnitTests, Publish, AddGithubRelease'
+        run: ./build.cmd UnitTests Publish AddGithubRelease
         env:
-          GitHubToken: ${{ secrets.GITHUB_TOKEN }}
           NugetApiKey: ${{ secrets.NUGET_API_KEY }}
-      - uses: actions/upload-artifact@v1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Publish: unit-tests'
+        uses: actions/upload-artifact@v3
         with:
-          name: tests-results
-          path: output/tests-results
-      - uses: actions/upload-artifact@v1
+          name: unit-tests
+          path: output/artifacts/tests-results/unit-tests
+      - name: 'Publish: coverage-report'
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report
-          path: output/coverage-report
-      - uses: actions/upload-artifact@v1
+          path: output/artifacts/reports/coverage-report
+      - name: 'Publish: coverage-history'
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-history
-          path: output/coverage-history
-      - uses: actions/upload-artifact@v1
+          path: output/artifacts/reports/coverage-history
+      - name: 'Publish: packages'
+        uses: actions/upload-artifact@v3
         with:
-          name: artifacts
-          path: output/artifacts
+          name: packages
+          path: output/artifacts/packages
