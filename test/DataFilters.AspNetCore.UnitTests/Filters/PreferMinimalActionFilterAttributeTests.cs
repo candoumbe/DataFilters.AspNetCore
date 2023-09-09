@@ -12,9 +12,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Primitives;
-
-    using Moq;
-
+    using NSubstitute;
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
@@ -56,7 +54,7 @@
         {
             get
             {
-                StringValues preferHeaderValue = new ("return=minimal");
+                StringValues preferHeaderValue = new("return=minimal");
                 string[] methods = { Get, Post, Put, Patch };
                 foreach (string method in methods)
                 {
@@ -93,13 +91,13 @@
 
             ActionContext actionContext = new(
                httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
                new ModelStateDictionary());
 
             ActionExecutedContext actionExecutedContext = new(actionContext,
                                                               new List<IFilterMetadata>(),
-                                                              new Mock<object>())
+                                                              Substitute.For<object>())
             {
                 Result = new OkObjectResult(actual)
             };
