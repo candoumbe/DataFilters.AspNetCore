@@ -14,7 +14,7 @@
     <PackageReference Include="Candoumbe.Pipelines" Version="0.6.1" />
     <PackageReference Include="Candoumbe.Miscutilities" Version="0.11.1" />
     <PackageReference Include="ReportGenerator" Version="4.8.*" />
-    <PackageDownload Include="GitVersion.Tool" Version="[5.9.0]" />
+    <PackageDownload Include="GitVersion.Tool" Version="[5.10.3]" />
     <PackageDownload Include="Codecov.Tool" Version="[1.12.3]" />
   </ItemGroup>
 
