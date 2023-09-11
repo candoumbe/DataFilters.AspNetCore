@@ -92,6 +92,15 @@ namespace DataFilters.ContinuousIntegration
         IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations => throw new NotImplementedException();
 
         ///<inheritdoc/>
-        bool IReportCoverage.ReportToCodeCov => true;
+        bool IReportCoverage.ReportToCodeCov => this.Get<IReportCoverage>().CodecovToken is not null;
+
+        ///<inheritdoc/>
+        protected override void OnBuildCreated()
+        {
+            if (IsServerBuild)
+            {
+                Environment.SetEnvironmentVariable("DOTNET_ROLL_FORWARD", "LatestMajor");
+            }
+        }
     }
 }
