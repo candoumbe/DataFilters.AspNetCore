@@ -51,6 +51,18 @@ namespace DataFilters.ContinuousIntegration
         }
     )]
 
+    [GitHubActions(
+        "nightly-manual",
+        GitHubActionsImage.UbuntuLatest,
+        FetchDepth = 0,
+        On = new[] { GitHubActionsTrigger.WorkflowDispatch },
+        InvokedTargets = new[] { nameof(IMutationTest.MutationTests), nameof(IPack.Pack) },
+        EnableGitHubToken = true,
+        CacheKeyFiles = new[] { "global.json", "src/**/*.csproj" },
+        PublishArtifacts = true,
+        ImportSecrets = new[] { nameof(IMutationTest.StrykerDashboardApiKey) }
+    )]
+
     public class Build : NukeBuild,
         IHaveSolution,
         IHaveSourceDirectory,
@@ -60,6 +72,7 @@ namespace DataFilters.ContinuousIntegration
         IClean,
         ICompile,
         IUnitTest,
+        IMutationTest,
         IPack,
         IPushNugetPackages,
         ICreateGithubRelease,
@@ -93,6 +106,14 @@ namespace DataFilters.ContinuousIntegration
 
         ///<inheritdoc/>
         bool IReportCoverage.ReportToCodeCov => this.Get<IReportCoverage>().CodecovToken is not null;
+
+        ///<inheritdoc/>
+        IEnumerable<MutationProjectConfiguration> IMutationTest.MutationTestsProjects
+            => new[] { "DataFilters.AspNetCore" }
+                .Select(projectName => new MutationProjectConfiguration(Solution.AllProjects.Single(csproj => string.Equals(csproj.Name, projectName, StringComparison.InvariantCultureIgnoreCase)),
+                                                                        Solution.AllProjects.Where(csproj => csproj.Name.EndsWith($"{projectName}.UnitTests", StringComparison.InvariantCultureIgnoreCase)),
+                                                                        this.Get<IHaveTestDirectory>().TestDirectory / $"{projectName}.UnitTests" / "stryker-config.json"))
+                .ToArray();
 
         ///<inheritdoc/>
         protected override void OnBuildCreated()

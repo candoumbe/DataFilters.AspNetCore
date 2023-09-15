@@ -111,6 +111,7 @@
               "Feature",
               "Hotfix",
               "ManageSecrets",
+              "MutationTests",
               "Pack",
               "Publish",
               "Release",
@@ -123,6 +124,10 @@
         "Solution": {
           "type": "string",
           "description": "Path to a solution file that is automatically loaded"
+        },
+        "StrykerDashboardApiKey": {
+          "type": "string",
+          "description": "API KEY used to submit mutation report to a stryker dashboard"
         },
         "Target": {
           "type": "array",
@@ -138,6 +143,7 @@
               "Feature",
               "Hotfix",
               "ManageSecrets",
+              "MutationTests",
               "Pack",
               "Publish",
               "Release",
