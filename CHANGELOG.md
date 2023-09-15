@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🧹 Housekeeping
 
 - Replaced Moq with Nsubstitute ([#117](https://github.com/candoumbe/DataFilters.AspNetCore/issues/117))
-- Fixed broken status badges
+- Fixed broken status badges ([#118](https://github.com/candoumbe/DataFilters.AspNetCore/issues/118))
+- Updated CI/CD to use [Candoumbe.Pipelines](https://nuget.org/packages/Candoumbe.Pipelines)
 
 ## [0.4.0] / 2022-08-17
 - Moved `MinimalAttribute` to a dedicated [`DataFilters.AspNetCore.Attributes`](https://nuget.org/packages/DataFilters.AspNetCore.Attributes) nuget package

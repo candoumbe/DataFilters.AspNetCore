@@ -127,7 +127,8 @@
         },
         "StrykerDashboardApiKey": {
           "type": "string",
-          "description": "API KEY used to submit mutation report to a stryker dashboard"
+          "description": "API KEY used to submit mutation report to a stryker dashboard",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "Target": {
           "type": "array",
