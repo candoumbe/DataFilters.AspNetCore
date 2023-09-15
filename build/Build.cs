@@ -60,13 +60,7 @@ namespace DataFilters.ContinuousIntegration
         EnableGitHubToken = true,
         CacheKeyFiles = new[] { "global.json", "src/**/*.csproj" },
         PublishArtifacts = true,
-        ImportSecrets = new[] { nameof(IMutationTest.StrykerDashboardApiKey) },
-        OnPullRequestExcludePaths = new[] {
-        "docs/*",
-        "README.md",
-        "CHANGELOG.md",
-        "LICENSE"
-        }
+        ImportSecrets = new[] { nameof(IMutationTest.StrykerDashboardApiKey) }
     )]
 
     public class Build : NukeBuild,
