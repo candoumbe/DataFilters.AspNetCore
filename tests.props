@@ -13,7 +13,7 @@
     <PackageReference Include="FsCheck.XUnit" Version="2.16.6"/>
     <PackageReference Include="coverlet.msbuild" Version="6.0.0" />
     <PackageReference Include="NSubstitute" Version="5.1.0"/>
-    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.16"/>
+    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17"/>
     <PackageReference Include="NodaTime.Bogus" Version="3.0.2" />
   </ItemGroup>
 </Project>
