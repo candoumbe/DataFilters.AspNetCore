@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🚨 Breaking changes
 
 - Dropped `net5.0` support ([#119](https://github.com/candoumbe/DataFilters.AspNetCore/issues/119))
+- Dropped `net6.0` support ([#197](https://github.com/candoumbe/DataFilters.AspnetCore/issues/197))
 
 ### 🧹 Housekeeping
 
-- Replaced Moq with Nsubstitute ([#117](https://github.com/candoumbe/DataFilters.AspNetCore/issues/117))
+- Replaced Moq with NSubstitute ([#117](https://github.com/candoumbe/DataFilters.AspNetCore/issues/117))
 - Fixed broken status badges ([#118](https://github.com/candoumbe/DataFilters.AspNetCore/issues/118))
 - Updated CI/CD to use [Candoumbe.Pipelines](https://nuget.org/packages/Candoumbe.Pipelines)
 
