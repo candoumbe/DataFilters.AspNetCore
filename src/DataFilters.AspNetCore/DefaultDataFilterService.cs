@@ -8,14 +8,20 @@ using System;
 namespace DataFilters.AspNetCore
 {
     /// <summary>
-    /// <see cref="IDataFilterService"/> implementation with a local L.R.U cache.
+    /// <see cref="IDataFilterService"/> implementation that uses a local LRU (Least Recently Used) cache.
     /// </summary>
     /// <remarks>
-    /// This service can be used wherever you need to build an <see cref="IFilter"/> instance for a given input as follow :
     /// <para>
-    /// <example>
-    /// 1. Define the <see cref="DataFilterOptions"/> to use when building <see cref="IFilter"/> instances.
-    /// <code>
+    /// This service is designed for scenarios where you need to efficiently build <see cref="IFilter"/> instances from various inputs.
+    /// </para>
+    /// <para>
+    /// Here's how to use the service:
+    /// </para>
+    /// <list type="number">
+    /// <item>
+    /// <term>Define the <see cref="DataFilterOptions"/> to use when building <see cref="IFilter"/> instances.</term>
+    /// <description>
+    /// <code language="csharp">
     /// DataFilterOptions options = new ()
     /// {
     ///     MaxCacheSize = 50,
@@ -26,28 +32,27 @@ namespace DataFilters.AspNetCore
     ///     }
     /// };
     /// </code>
-    /// </example>
-    /// </para>
-    /// <para>
-    /// <example>
-    /// 2. Create a <see cref="DefaultDataFilterService"/> instance with the <see cref="DataFilterOptions"/>.
-    /// <code>
-    /// IDataFilterService service = new(options);
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>Create a <see cref="DefaultDataFilterService"/> instance with the <see cref="DataFilterOptions"/>.</term>
+    /// <description>
+    /// <code language="csharp">
+    /// IDataFilterService service = new DefaultDataFilterService(options);
     /// </code>
-    /// </example>
-    /// </para>
-    ///
-    /// <para>
-    /// <example>
-    /// 3. The service can now be used to create <see cref="IFilter"/>s.
-    ///
-    /// <code>
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>Use the service to create <see cref="IFilter"/> instances.</term>
+    /// <description>
+    /// <code language="csharp">
     /// string query = "Firstname=B*&amp;Lastname=Wayne";
-    ///
+    /// 
     /// IFilter filter = service.Compute&lt;Person&gt;(query);
     /// </code>
-    /// </example>
-    /// </para>
+    /// </description>
+    /// </item>
+    /// </list>
     /// </remarks>
     public class DefaultDataFilterService : IDataFilterService
     {
@@ -55,17 +60,13 @@ namespace DataFilters.AspNetCore
         private readonly IMemoryCache _cache;
 
         /// <summary>
-        /// Builds a new <see cref="DefaultDataFilterService"/>
+        /// Builds a new <see cref="DefaultDataFilterService"/> instance.
         /// </summary>
         /// <param name="options"></param>
         /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
         public DefaultDataFilterService(DataFilterOptions options)
         {
-            if (options is null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _cache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = options.MaxCacheSize });
         }
 
