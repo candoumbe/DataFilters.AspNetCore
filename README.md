@@ -30,25 +30,19 @@ In order to build a filter, you have to :
 
 This can be a tedious task and this library can help to ease that process.
 
-### <a href="#" id="reduce-bandwith-usage">Reduce the bandwith usage</a>
-The library can help reduce bandwith usage. This can be done in two  differnet ways : 
+### <a href="#" id="reduce-bandwith-usage">Reduce the bandwidth usage</a>
+The library can help reduce bandwidth usage. This can be done in two different ways : 
 - using `x-datafilters-fields-include` / `x-datafilters-fields-exclude` custom HTTP headers
-- using [`Prefer`] HTTP header,  .
+- using [`Prefer`] HTTP header
 
 #### <a href="#" id="custom-http-headers"> Custom HTTP headers</a>
 
-##### `x-datafilters-fields-include`
-
-`x-datafilters-fields-include` custom HTTP header allows to specified which properties that will be kept in the body response.
-
-##### `x-datafilters-fields-exclude` 
-
-`x-datafilters-fields-exclude` custom HTTP header allows to specify which properties that will be 
-dropped from the body response.
+* `x-datafilters-fields-include` custom HTTP header allows to specify which properties should be kept in the body response.
+* `x-datafilters-fields-exclude` custom HTTP header allows to specify which properties should be dropped from the body response.
 
 These custom headers can be handy for mobile clients that query a REST API by reducing the volume 
-of data transfered from backend. This can also allow to design one API that can serve multiple clients :
-each client could "select" the properties it want to display.
+of data transferred from backend. This can also allow to design one API that can serve multiple clients :
+each client could "select" the properties it wants to display.
 
 #### <a href="#" id="prefer-http-header-support">[`Prefer`](https://httpwg.org/specs/rfc7240.html) HTTP header support</a>
 
@@ -57,7 +51,7 @@ Specifically, a client can request a "minimal" representation of the resource by
 
 Given the following request
 
-```http
+```http request
 GET /api/users HTTP/1.1
 
 Prefer: return=minimal
@@ -79,7 +73,7 @@ public class Person
 
 the server can respond with a "minimal" representation of the resource.
 
-```http
+```http request
 HTTP/1.1 200 OK
 
 <headers omitted for brevity>
@@ -99,16 +93,16 @@ HTTP/1.1 200 OK
 To enable support of the `Prefer: return=minimal` HTTP header :
 
 1. Register an instance of [`PreferActionFilterAttribute`][cls-filters-prefer] in your filters
-
 ```csharp
 services.Filters.Add(new PreferActionFilterAttribute());
 ```
-
 2. Annotate properties in your classes with [MinimalAttribute][cls-attrs-minimal].
+3. Send a request with `Prefer` header to the API and you should get responses that conforms to your settings.
+
 
 ### Improve performances
 
-The library comes with an implementation of [`IDataFilterService`](/src/DataFilters.AspNetCore/IDataFilterService.cs)  that can be used to build `IFilter` instances: each instance will be cached and reused when needed.
+The library comes with an implementation of [`IDataFilterService`](./src/DataFilters.AspNetCore/IDataFilterService.cs)  that can be used to build `IFilter` instances: each instance will be cached and reused when needed.
 
 ## [How to install](#how-to-install)</a>
 
@@ -116,6 +110,6 @@ The library comes with an implementation of [`IDataFilterService`](/src/DataFilt
 2. You're ready to go
 
 [DataFilters]: https://nuget.org/packages/DataFilters
-[cls-attrs-minimal]: /src/DataFilters.AspNetCore/Attributes/MinimalAttribute.cs
-[cls-filters-select]: /src/DataFilters.AspNetCore/Filters/SelectPropertiesActionFilterAttribute.cs
-[cls-filters-prefer]: /src/DataFilters.AspNetCore/Filters/PreferMinimalActionFilterAttribute.cs
+[cls-attrs-minimal]: ./src/DataFilters.AspNetCore.Attributes/MinimalAttribute.cs
+[cls-filters-select]: ./src/DataFilters.AspNetCore/Filters/SelectPropertiesActionFilterAttribute.cs
+[cls-filters-prefer]: ./src/DataFilters.AspNetCore/Filters/PreferMinimalActionFilterAttribute.cs
