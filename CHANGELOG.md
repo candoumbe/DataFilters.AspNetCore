@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### 🚨 Breaking changes
-
+### 💥 Breaking changes
 - Dropped `net5.0` support ([#119](https://github.com/candoumbe/DataFilters.AspNetCore/issues/119))
 - Dropped `net6.0` support ([#197](https://github.com/candoumbe/DataFilters.AspnetCore/issues/197))
+
+### 🚨 Fixes
+- Made detecting supported requests for `PreferMinimalActionFilterAttribute` more reliable
 
 ### 🧹 Housekeeping
 
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `MinimalAttribute` to support `Prefer: return=minimal` HTTP header ([#47](https://github.com/candoumbe/DataFilters.AspNetCore/issues/47)) 
 
 ## [0.2.0] / 2022-03-29
+### 🧹 Housekeeping
 - Bumped [`Candoumbe.MiscUtilities`](https://nuget.org/packages/Candoumbe.MiscUtilities) to [`0.6.3`](https://nuget.org/packages/Candoumbe.DataFilters/0.8.0)
 - Bumped [`DataFilters`](https://nuget.org/packages/DataFilters) to [`0.11.0`](https://nuget.org/packages/Candoumbe/DataFilters/0.8.0)
 - Dropped `FluentAssertions` dependency
