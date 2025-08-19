@@ -18,7 +18,7 @@ namespace DataFilters.ContinuousIntegration
         FetchDepth = 0,
         OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
         PublishArtifacts = true,
-        InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportCoverage.ReportCoverage), nameof(IPack.Pack)],
+        InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
         CacheKeyFiles = ["global.json", "src/**/*.csproj"],
         ImportSecrets =
         [
@@ -67,11 +67,13 @@ namespace DataFilters.ContinuousIntegration
     public class Build : EnhancedNukeBuild,
         IHaveSourceDirectory,
         IHaveTestDirectory,
+        IHaveSolution,
         IClean,
+        IUnitTest,
         IMutationTest,
         IPushNugetPackages,
         ICreateGithubRelease,
-        IReportCoverage,
+        IReportUnitTestCoverage,
         IGitFlowWithPullRequest
     {
         public static int Main() => Execute<Build>(x => ((ICompile)x).Compile);
