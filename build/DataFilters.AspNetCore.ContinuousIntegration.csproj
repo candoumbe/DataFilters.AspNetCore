@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Candoumbe.Pipelines" Version="1.0.0-rc.25" />
+    <PackageReference Include="Candoumbe.Pipelines" Version="1.2.0" />
     <PackageReference Include="CodecovUploader" Version="0.8.0" />  
     <PackageReference Include="ReportGenerator" Version="5.3.9" />
     <PackageDownload Include="GitVersion.Tool" Version="[5.10.3]" />
