@@ -46,7 +46,7 @@ jobs:
       - name: 'Run: UnitTests, Publish, AddGithubRelease'
         run: ./build.cmd UnitTests Publish AddGithubRelease
         env:
-          NugetApiKey: ${{ secrets.NUGET_API_KEY }}
+          NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Publish: unit-tests'
         uses: actions/upload-artifact@v4
@@ -63,6 +63,11 @@ jobs:
         with:
           name: unit-tests-coverage-history
           path: output/artifacts/reports/coverage-history/unit-tests-coverage-history
+      - name: 'Publish: mutation-tests'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-tests
+          path: output/artifacts/tests-results/mutation-tests
       - name: 'Publish: packages'
         uses: actions/upload-artifact@v4
         with:

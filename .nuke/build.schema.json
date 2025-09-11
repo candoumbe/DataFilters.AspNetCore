@@ -26,6 +26,7 @@
       "enum": [
         "AddGithubRelease",
         "Changelog",
+        "Chore",
         "Clean",
         "Coldfix",
         "Compile",
@@ -36,6 +37,7 @@
         "Publish",
         "Release",
         "ReportUnitTestCoverage",
+        "Restore",
         "UnitTests"
       ]
     },
@@ -114,6 +116,10 @@
           "type": "boolean",
           "description": "Indicates if any changes should be stashed automatically prior to switching branch (Default : true)"
         },
+        "ChoreBranchPrefix": {
+          "type": "string",
+          "description": "The name of the chore branch prefix"
+        },
         "CodecovToken": {
           "type": "string",
           "description": "The API key used to push code coverage to CodeCov",
@@ -148,6 +154,10 @@
           "description": "Token used to create a new release in GitHub",
           "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
+        "IgnoreFailedSources": {
+          "type": "boolean",
+          "description": "Ignore unreachable sources during Restore"
+        },
         "Issues": {
           "type": "array",
           "description": "Issues that will be closed once the pull request is completed",
@@ -162,10 +172,6 @@
         "Name": {
           "type": "string",
           "description": "Name of the branch to create"
-        },
-        "NugetApiKey": {
-          "type": "string",
-          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "NuGetApiKey": {
           "type": "string",
