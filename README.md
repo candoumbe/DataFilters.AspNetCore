@@ -93,9 +93,6 @@ HTTP/1.1 200 OK
 To enable support of the `Prefer: return=minimal` HTTP header :
 
 1. Register an instance of [`PreferActionFilterAttribute`][cls-filters-prefer] in your filters
-```csharp
-services.Filters.Add(new PreferActionFilterAttribute());
-```
 2. Annotate properties in your classes with [MinimalAttribute][cls-attrs-minimal]: those properties will be the only ones sent when a client requests a minimal representation of the resource.
 3. Send a request with `Prefer` header to the API and you should get responses that conforms to your settings.
 

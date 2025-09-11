@@ -1,20 +1,18 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
-
-namespace DataFilters.AspNetCore.Filters;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Primitives;
-
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Primitives;
 using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.Filters;
+
 
 /// <summary>
 /// An <see cref="ActionFilterAttribute"/> implementation that allows to specify which properties an object
@@ -99,7 +97,7 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
     {
         if (ShouldActivate(context.HttpContext.Request.Method) && context.HttpContext.Request.Headers.ContainsKey(IncludeFieldSelectorHeaderName)
                                                                && context.HttpContext.Request.Headers.ContainsKey(ExcludeFieldSelectorHeaderName)
-            )
+           )
         {
             ModelStateDictionary modelState = context.ModelState ?? new ModelStateDictionary();
             modelState.TryAddModelError("x-datafilters-fields", $"Cannot specify both '{IncludeFieldSelectorHeaderName}' and '{ExcludeFieldSelectorHeaderName}'");
@@ -119,7 +117,7 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
         }
 
         if ((mustIncludeFields || mustExcludeFields) && context.Result is OkObjectResult objectResult && (fieldsToInclude.AtLeastOnce() || fieldsToExclude.AtLeastOnce())
-            )
+           )
         {
             string method = context.HttpContext.Request.Method;
 
@@ -128,12 +126,12 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
                 object obj = objectResult.Value;
 
                 IEnumerable<PropertyInfo> propertyToIncludeInfos = fieldsToInclude.AtLeastOnce()
-                                                                    ? obj.GetType()
-                                                                        .GetProperties()
-                                                                        .Where(pi => fieldsToInclude.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)))
-                                                                    : obj.GetType()
-                                                                         .GetProperties()
-                                                                         .Where(pi => !fieldsToExclude.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)));
+                                                                       ? obj.GetType()
+                                                                           .GetProperties()
+                                                                           .Where(pi => fieldsToInclude.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)))
+                                                                       : obj.GetType()
+                                                                           .GetProperties()
+                                                                           .Where(pi => !fieldsToExclude.Any(field => field.Equals(pi.Name, StringComparison.OrdinalIgnoreCase)));
                 ExpandoObject after = new();
 
                 propertyToIncludeInfos.ForEach(prop => after.TryAdd(prop.Name, prop.GetValue(obj)));
@@ -149,7 +147,7 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
     /// <param name="method">HTTP method</param>
     /// <returns><see langword="true"/> if the attribute should run and <see langword="false"/> otherwise.</returns>
     private bool ShouldActivate(string method) => (OnGet && IsGet(method))
-                                                    || (OnPost && IsPost(method))
-                                                    || (OnPatch && IsPatch(method))
-                                                    || (OnPut && IsPut(method));
+                                                  || (OnPost && IsPost(method))
+                                                  || (OnPatch && IsPatch(method))
+                                                  || (OnPut && IsPut(method));
 }

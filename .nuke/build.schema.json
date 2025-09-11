@@ -30,12 +30,14 @@
         "Coldfix",
         "Compile",
         "Feature",
+        "Format",
         "Hotfix",
         "MutationTests",
         "Pack",
         "Publish",
         "Release",
         "ReportUnitTestCoverage",
+        "Restore",
         "UnitTests"
       ]
     },
@@ -143,10 +145,26 @@
           "type": "boolean",
           "description": "Indicates to open the pull request as 'draft'"
         },
+        "Formatters": {
+          "type": "array",
+          "description": "Sets of formatters that the tool must apply",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Analyzers",
+              "Style",
+              "Whitespace"
+            ]
+          }
+        },
         "GitHubToken": {
           "type": "string",
           "description": "Token used to create a new release in GitHub",
           "default": "Secrets must be entered via 'nuke :secrets [profile]'"
+        },
+        "IgnoreFailedSources": {
+          "type": "boolean",
+          "description": "Ignore unreachable sources during Restore"
         },
         "Issues": {
           "type": "array",
@@ -162,10 +180,6 @@
         "Name": {
           "type": "string",
           "description": "Name of the branch to create"
-        },
-        "NugetApiKey": {
-          "type": "string",
-          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "NuGetApiKey": {
           "type": "string",
