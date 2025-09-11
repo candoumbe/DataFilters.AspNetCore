@@ -11,28 +11,29 @@ namespace DataFilters.ContinuousIntegration
     using Candoumbe.Pipelines.Components.NuGet;
     using Candoumbe.Pipelines.Components.GitHub;
     using System.Linq;
+    using Candoumbe.Pipelines.Components.Workflows;
 
     [GitHubActions(
-        "continuous",
-        GitHubActionsImage.UbuntuLatest,
-        FetchDepth = 0,
-        OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
-        PublishArtifacts = true,
-        InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
-        CacheKeyFiles = ["global.json", "src/**/*.csproj"],
-        ImportSecrets =
-        [
-            nameof(NugetApiKey),
-            nameof(IReportCoverage.CodecovToken)
-        ],
-        OnPullRequestExcludePaths =
-        [
-            "docs/*",
-            "README.md",
-            "CHANGELOG.md",
-            "LICENSE"
-        ]
-    )]
+                      "continuous",
+                      GitHubActionsImage.UbuntuLatest,
+                      FetchDepth = 0,
+                      OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
+                      PublishArtifacts = true,
+                      InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
+                      CacheKeyFiles = ["global.json", "src/**/*.csproj"],
+                      ImportSecrets =
+                      [
+                          nameof(IPushNugetPackages.NuGetApiKey),
+                          nameof(IReportCoverage.CodecovToken)
+                      ],
+                      OnPullRequestExcludePaths =
+                      [
+                          "docs/*",
+                          "README.md",
+                          "CHANGELOG.md",
+                          "LICENSE"
+                      ]
+                  )]
     [GitHubActions(
         "deployment",
         GitHubActionsImage.UbuntuLatest,
@@ -42,7 +43,7 @@ namespace DataFilters.ContinuousIntegration
         EnableGitHubToken = true,
         CacheKeyFiles = ["global.json", "src/**/*.csproj"],
         PublishArtifacts = true,
-        ImportSecrets = [nameof(NugetApiKey)],
+        ImportSecrets = [nameof(IPushNugetPackages.NuGetApiKey)],
         OnPullRequestExcludePaths =
         [
             "docs/*",
@@ -69,7 +70,7 @@ namespace DataFilters.ContinuousIntegration
         IHaveTestDirectory,
         IHaveSolution,
         IClean,
-        IUnitTest,
+        IRestore,
         IMutationTest,
         IPushNugetPackages,
         ICreateGithubRelease,
@@ -78,7 +79,7 @@ namespace DataFilters.ContinuousIntegration
     {
         public static int Main() => Execute<Build>(x => ((ICompile)x).Compile);
 
-        [Required][Solution] public readonly Solution Solution;
+        [Required][Solution] public Solution Solution;
 
         ///<inheritdoc/>
         IEnumerable<AbsolutePath> IClean.DirectoriesToDelete => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobDirectories("**/bin", "**/obj")
@@ -86,12 +87,6 @@ namespace DataFilters.ContinuousIntegration
 
         ///<inheritdoc/>
         Solution IHaveSolution.Solution => Solution;
-
-        [CI] public readonly GitHubActions GitHubActions;
-
-        [Parameter]
-        [Secret]
-        public readonly string NugetApiKey;
 
         ///<inheritdoc/>
         IEnumerable<Project> IUnitTest.UnitTestsProjects => this.Get<IHaveSolution>().Solution.GetAllProjects("*.UnitTests");
