@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Candoumbe.Pipelines" Version="1.2.1-fix.2" />
-    <PackageReference Include="CodecovUploader" Version="0.8.0" />  
-    <PackageReference Include="ReportGenerator" Version="5.3.9" />
+    <PackageReference Include="Candoumbe.Pipelines" />
+    <PackageReference Include="CodecovUploader" />  
+    <PackageReference Include="ReportGenerator" />
     <PackageDownload Include="GitVersion.Tool" Version="[5.10.3]" />
     <PackageDownload Include="dotnet-stryker" Version="[4.8.1]" />
   </ItemGroup>

@@ -16,6 +16,7 @@ namespace DataFilters.ContinuousIntegration
     [GitHubActions(
                       "continuous",
                       GitHubActionsImage.UbuntuLatest,
+                      AutoGenerate = false,
                       FetchDepth = 0,
                       OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
                       PublishArtifacts = true,
@@ -37,6 +38,7 @@ namespace DataFilters.ContinuousIntegration
     [GitHubActions(
         "deployment",
         GitHubActionsImage.UbuntuLatest,
+        AutoGenerate = false,
         FetchDepth = 0,
         OnPushBranches = [nameof(IGitFlow.MainBranchName), nameof(IGitFlow.ReleaseBranchPrefix) + "/*"],
         InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IPushNugetPackages.Publish), nameof(ICreateGithubRelease.AddGithubRelease)],
@@ -56,6 +58,7 @@ namespace DataFilters.ContinuousIntegration
     [GitHubActions(
         "nightly-manual",
         GitHubActionsImage.UbuntuLatest,
+        AutoGenerate = false,
         FetchDepth = 0,
         On = [GitHubActionsTrigger.WorkflowDispatch],
         InvokedTargets = [nameof(IMutationTest.MutationTests), nameof(IPack.Pack)],
