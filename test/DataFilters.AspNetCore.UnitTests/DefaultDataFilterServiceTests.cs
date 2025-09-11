@@ -62,7 +62,7 @@ namespace DataFilters.AspNetCore.UnitTests
             DefaultDataFilterService sut = new(options);
 
             // Act
-            IFilter actual = sut.Compute<SuperHero>(input);
+            IFilter actual = sut.Compute<SuperHero>(input, options.FilterOptions);
 
             // Assert
             actual.Should()

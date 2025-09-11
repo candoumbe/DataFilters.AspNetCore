@@ -71,7 +71,7 @@ namespace DataFilters.AspNetCore
         }
 
         ///<inheritdoc/>
-        public IFilter Compute<T>(string input, FilterOptions filterComputationOptions = null)
+        public IFilter Compute<T>(string input, FilterOptions filterComputationOptions)
         {
             string key = $"{typeof(T).FullName}_{input}";
 
