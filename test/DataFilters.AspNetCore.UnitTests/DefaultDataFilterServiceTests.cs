@@ -1,9 +1,9 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,45 +11,26 @@ namespace DataFilters.AspNetCore.UnitTests;
 
 public class DefaultDataFilterServiceTests
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly DefaultDataFilterService _sut;
-
     public DefaultDataFilterServiceTests(ITestOutputHelper outputHelper)
     {
-        _outputHelper = outputHelper;
     }
 
-
-        public static IEnumerable<object[]> ComputeCases
+    public static TheoryData<string, DataFilterOptions, IFilter> ComputeCases
+    {
+        get
         {
-            get
+            TheoryData<string, DataFilterOptions, IFilter> cases = new()
             {
-                yield return new object[]
-                {
-                    "Nickname=Bat",
-                    new DataFilterOptions(),
-                    new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat")
-                };
-                FilterLogic[] filterLogics = { FilterLogic.And, FilterLogic.Or };
-                foreach (FilterLogic logic in filterLogics)
-                {
-                    yield return new object[]
-                    {
-                        $"{nameof(SuperHero.Nickname)}=Bat&{nameof(SuperHero.Nickname)}=*Wonder*",
-                        new DataFilterOptions { FilterOptions = new FilterOptions() { Logic = logic } },
-                        new MultiFilter
-                        {
-                            Logic = logic,
-                            Filters = new[]
-                            {
-                                new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat"),
-                                new Filter("Nickname", @operator: FilterOperator.Contains, "Wonder"),
-                            }
-                        }
-                    };
-                }
+                { "Nickname=Bat", new DataFilterOptions(), new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat") }
+            };
+            FilterLogic[] filterLogics = { FilterLogic.And, FilterLogic.Or };
+            foreach (FilterLogic logic in filterLogics)
+            {
+                cases.Add($"{nameof(SuperHero.Nickname)}=Bat&{nameof(SuperHero.Nickname)}=*Wonder*", new DataFilterOptions { FilterOptions = new FilterOptions() { Logic = logic } }, new MultiFilter { Logic = logic, Filters = new[] { new Filter("Nickname", @operator: FilterOperator.EqualTo, "Bat"), new Filter("Nickname", @operator: FilterOperator.Contains, "Wonder"), } });
             }
+            return cases;
         }
+    }
 
     [Theory]
     [MemberData(nameof(ComputeCases))]

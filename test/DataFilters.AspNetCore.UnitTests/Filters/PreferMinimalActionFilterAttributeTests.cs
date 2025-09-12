@@ -1,38 +1,33 @@
-﻿namespace DataFilters.AspNetCore.UnitTests.Filters
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq.Expressions;
+using DataFilters.AspNetCore.Attributes;
+using DataFilters.AspNetCore.Filters;
+using FluentAssertions;
+using FluentAssertions.Equivalency.Tracing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
+using NSubstitute;
+using Xunit;
+using Xunit.Abstractions;
+using Xunit.Categories;
+using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.UnitTests.Filters
 {
-    using DataFilters.AspNetCore.Attributes;
-    using DataFilters.AspNetCore.Filters;
-
-    using FluentAssertions;
-
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Primitives;
-    using NSubstitute;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq.Expressions;
-    using FluentAssertions.Equivalency.Tracing;
-    using Xunit;
-    using Xunit.Abstractions;
-    using Xunit.Categories;
-
-    using static Microsoft.AspNetCore.Http.HttpMethods;
-
     [UnitTest]
     public class PreferMinimalActionFilterAttributeTests
     {
-        private readonly ITestOutputHelper _outputHelper;
         private readonly PreferMinimalActionFilterAttribute _sut;
 
         public PreferMinimalActionFilterAttributeTests(ITestOutputHelper outputHelper)
         {
-            _outputHelper = outputHelper;
             _sut = new PreferMinimalActionFilterAttribute();
         }
 
@@ -52,16 +47,16 @@
                                      .BeDerivedFrom<ActionFilterAttribute>();
         }
 
-        public static IEnumerable<object[]> OkObjectResultCases
+        public static TheoryData<string, IHeaderDictionary, object, Expression<Func<ExpandoObject, bool>>, string> OkObjectResultCases
         {
             get
             {
                 StringValues preferHeaderValue = new("return=minimal");
                 string[] methods = [Get, Post, Put, Patch];
+                TheoryData<string, IHeaderDictionary, object, Expression<Func<ExpandoObject, bool>>, string> cases = new();
                 foreach (string method in methods)
                 {
-                    yield return
-                    [
+                    cases.Add(
                         method,
                         new HeaderDictionary(new Dictionary<string, StringValues>
                         {
@@ -73,8 +68,9 @@
                                                                            && expando.Once(kv => kv.Key == nameof(FooWithMinimalProps.Baz))
                                                                ),
                         $"The filter is configured to support HTTP verb '{method}' is supported and '{PreferMinimalActionFilterAttribute.PreferHeaderName}' header is set to {preferHeaderValue}"
-                    ];
+                    );
                 }
+                return cases;
             }
         }
 
@@ -121,8 +117,8 @@
         {
             get
             {
-                (StringValues preferHeaderValues, string reason)[] preferHeaderValuesAndReason =  [
-                    (new StringValues(),  "The header as no value set"),
+                (StringValues preferHeaderValues, string reason)[] preferHeaderValuesAndReason = [
+                    (new StringValues(), "The header as no value set"),
                     (new StringValues("return=representation"), "The header's value is `representation` which should not activate the filter."),
                     (new StringValues(["return=representation", "return=minimal"]), "The header has both minimal and representation values")
                 ];
@@ -185,7 +181,7 @@
 
             result.Should()
                   .BeAssignableTo<ObjectResult>().Which.Value
-                  .Should().BeEquivalentTo(expected);
+                  .Should().BeEquivalentTo(expected, reason);
         }
 
         private record FooWithMinimalProps
