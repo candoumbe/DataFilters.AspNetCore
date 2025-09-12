@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.5.0] / 2025-09-12
 ### 💥 Breaking changes
 - Dropped `net5.0` support ([#119](https://github.com/candoumbe/DataFilters.AspNetCore/issues/119))
 - Dropped `net6.0` support ([#197](https://github.com/candoumbe/DataFilters.AspNetCore/issues/197))
