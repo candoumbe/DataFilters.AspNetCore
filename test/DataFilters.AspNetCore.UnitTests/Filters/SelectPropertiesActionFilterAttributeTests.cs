@@ -1,33 +1,27 @@
-﻿namespace DataFilters.AspNetCore.UnitTests.Filters
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using Bogus;
+using DataFilters.AspNetCore.Filters;
+using FluentAssertions;
+using FsCheck;
+using FsCheck.Xunit;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
+using NSubstitute;
+using Xunit;
+using Xunit.Abstractions;
+using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.UnitTests.Filters
 {
-    using Bogus;
-
-    using DataFilters.AspNetCore.Filters;
-
-    using FluentAssertions;
-
-    using FsCheck;
-    using FsCheck.Xunit;
-
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Primitives;
-    using NSubstitute;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-
-    using Xunit;
-    using Xunit.Abstractions;
-
-    using static Microsoft.AspNetCore.Http.HttpMethods;
-
     public class SelectPropertiesActionFilterAttributeTests
     {
         private readonly ITestOutputHelper _outputHelper;
@@ -83,53 +77,54 @@
             attribute.OnPatch.Should().Be(onPatch);
         }
 
-        public static IEnumerable<object[]> OkObjectResultCases
+        public static TheoryData<string, IHeaderDictionary, object, Expression<Func<IEnumerable<string>, bool>>, string> OkObjectResultCases
         {
             get
             {
-                yield return new object[]
+                TheoryData<string, IHeaderDictionary, object, Expression<Func<IEnumerable<string>, bool>>, string> cases = new()
                 {
-                    Get,
-                    new HeaderDictionary(new Dictionary<string, StringValues>
                     {
-                        [SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName] = new StringValues("prop")
-                    }),
-                    new
-                    {
-                        prop = "value",
-                        prop2 = new
+                        Get,
+                        new HeaderDictionary(new Dictionary<string, StringValues>
                         {
-                            subProp = 1,
-                            subProp2 = 2
-                        }
-                    },
-                    (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
-                                                                           && props.Once(propName => propName =="prop")
-                    ),
-                    $"The filter is configured to support HTTP verb '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName}' header is set to 'prop'"
-                };
-
-                yield return new object[]
-                {
-                    Get,
-                    new HeaderDictionary(new Dictionary<string, StringValues>
-                    {
-                        [SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName] = new StringValues("prop")
-                    }),
-                    new
-                    {
-                        prop = "value",
-                        prop2 = new
+                            [SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName] = new StringValues("prop")
+                        }),
+                        new
                         {
-                            subProp = 1,
-                            subProp2 = 2
+                            prop = "value",
+                            prop2 = new
+                            {
+                                subProp = 1,
+                                subProp2 = 2
+                            }
                         },
+                        (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
+                                                                               && props.Once(propName => propName == "prop")
+                        ),
+                        $"The filter is configured to support HTTP verb '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.IncludeFieldSelectorHeaderName}' header is set to 'prop'"
                     },
-                    (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
-                                                                           && props.Once(propName => propName =="prop2")
-                    ),
-                    $"The filter is configured to support HTTP '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName}' header is set to 'prop'"
+                    {
+                        Get,
+                        new HeaderDictionary(new Dictionary<string, StringValues>
+                        {
+                            [SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName] = new StringValues("prop")
+                        }),
+                        new
+                        {
+                            prop = "value",
+                            prop2 = new
+                            {
+                                subProp = 1,
+                                subProp2 = 2
+                            },
+                        },
+                        (Expression<Func<IEnumerable<string>, bool>>)(props => props.Exactly(1)
+                                                                               && props.Once(propName => propName == "prop2")
+                        ),
+                        $"The filter is configured to support HTTP '{Get}' is supported and '{SelectPropertiesActionFilterAttribute.ExcludeFieldSelectorHeaderName}' header is set to 'prop'"
+                    }
                 };
+                return cases;
             }
         }
 

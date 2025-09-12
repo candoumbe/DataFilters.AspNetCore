@@ -70,8 +70,11 @@ namespace DataFilters.AspNetCore
             _cache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = options.MaxCacheSize });
         }
 
+        /// <inheritdoc />
+        public IFilter Compute<T>(string input) => Compute<T>(input, null);
+
         ///<inheritdoc/>
-        public IFilter Compute<T>(string input, FilterOptions filterComputationOptions = null)
+        public IFilter Compute<T>(string input, FilterOptions filterComputationOptions)
         {
             string key = $"{typeof(T).FullName}_{input}";
 

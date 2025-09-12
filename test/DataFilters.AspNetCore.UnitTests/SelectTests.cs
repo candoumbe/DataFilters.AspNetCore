@@ -1,17 +1,15 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
+using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
+using Xunit.Categories;
+
 namespace DataFilters.AspNetCore.UnitTests
 {
-    using FluentAssertions;
-
-    using System;
-    using System.Collections.Generic;
-
-    using Xunit;
-    using Xunit.Abstractions;
-    using Xunit.Categories;
-
     [UnitTest]
     public class SelectTests
     {
@@ -40,26 +38,23 @@ namespace DataFilters.AspNetCore.UnitTests
                 .Where(ex => !string.IsNullOrWhiteSpace(ex.Message), "Message cannot be null");
         }
 
-        public static IEnumerable<object[]> EqualsCases
+        public static TheoryData<Select, object, bool, string> EqualsCases
         {
             get
             {
-                yield return new object[]
+                TheoryData<Select, object, bool, string> cases = new()
                 {
-                    new Select("Name"),
-                    new Select("Name"),
-                    true,
-                    $"Two distinct {nameof(Select)} instances with same properties must be equal"
+                    { new Select("Name"), new Select("Name"), true, $"Two distinct {nameof(Select)} instances with same properties must be equal" }
                 };
 
                 Select selector = new("Name");
-                yield return new object[]
-                {
+                cases.Add(
                         selector,
                         selector,
                         true,
                         $"A {nameof(Select)} instance is equal to itself"
-                };
+                );
+                return cases;
             }
         }
 
