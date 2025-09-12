@@ -1,26 +1,23 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.UnitTests
+using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace DataFilters.AspNetCore.UnitTests;
+
+public class DefaultDataFilterServiceTests
 {
+    private readonly ITestOutputHelper _outputHelper;
+    private readonly DefaultDataFilterService _sut;
 
-    using FluentAssertions;
-
-    using System;
-    using System.Collections.Generic;
-
-    using Xunit;
-    using Xunit.Abstractions;
-
-    public class DefaultDataFilterServiceTests
+    public DefaultDataFilterServiceTests(ITestOutputHelper outputHelper)
     {
-        private readonly ITestOutputHelper _outputHelper;
-        private readonly DefaultDataFilterService _sut;
-
-        public DefaultDataFilterServiceTests(ITestOutputHelper outputHelper)
-        {
-            _outputHelper = outputHelper;
-        }
+        _outputHelper = outputHelper;
+    }
 
 
         public static IEnumerable<object[]> ComputeCases
@@ -54,30 +51,29 @@ namespace DataFilters.AspNetCore.UnitTests
             }
         }
 
-        [Theory]
-        [MemberData(nameof(ComputeCases))]
-        public void Given_input_and_options_Compute_should_build_expected_Filter_instance(string input, DataFilterOptions options, IFilter expected)
-        {
-            // Arrange
-            DefaultDataFilterService sut = new(options);
+    [Theory]
+    [MemberData(nameof(ComputeCases))]
+    public void Given_input_and_options_Compute_should_build_expected_Filter_instance(string input, DataFilterOptions options, IFilter expected)
+    {
+        // Arrange
+        DefaultDataFilterService sut = new(options);
 
-            // Act
-            IFilter actual = sut.Compute<SuperHero>(input);
+        // Act
+        IFilter actual = sut.Compute<SuperHero>(input);
 
-            // Assert
-            actual.Should()
-                  .Be(expected);
-        }
+        // Assert
+        actual.Should()
+            .Be(expected);
+    }
 
-        [Fact]
-        public void Given_options_is_null_Constructor_should_throw_ArgumentNullException()
-        {
-            // Act
-            Action ctorWhereOptionsIsNull = () => new DefaultDataFilterService(null);
+    [Fact]
+    public void Given_options_is_null_Constructor_should_throw_ArgumentNullException()
+    {
+        // Act
+        Action ctorWhereOptionsIsNull = () => new DefaultDataFilterService(null);
 
-            // Assert
-            ctorWhereOptionsIsNull.Should()
-                                  .ThrowExactly<ArgumentNullException>();
-        }
+        // Assert
+        ctorWhereOptionsIsNull.Should()
+            .ThrowExactly<ArgumentNullException>();
     }
 }
