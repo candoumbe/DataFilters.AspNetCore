@@ -32,7 +32,7 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
       </PropertyGroup>
       <ItemGroup Condition="'$(IsTestProject)' == 'false'">
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" Condition="'$(GITHUB_ACTIONS)' == 'true'"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Condition="'$(GITHUB_ACTIONS)' == 'true'" />
       </ItemGroup>
     </When>
   </Choose>
@@ -45,19 +45,17 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="DataFilters" Version="0.11.0"/>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+        <PackageReference Include="DataFilters" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
       </ItemGroup>
     </Otherwise>
   </Choose>
 
   <ItemGroup>
-    <PackageReference Include="Roslynator.Analyzers" Version="3.*">
-      <PrivateAssets>all</PrivateAssets>
+    <PackageReference Include="Roslynator.Analyzers">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.Csharp" Version="8.*">
-      <PrivateAssets>all</PrivateAssets>
+    <PackageReference Include="SonarAnalyzer.Csharp">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>

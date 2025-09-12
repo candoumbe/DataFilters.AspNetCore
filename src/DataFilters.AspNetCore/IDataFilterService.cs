@@ -4,10 +4,11 @@
 namespace DataFilters.AspNetCore;
 
 /// <summary>
-/// A service that can built and cache <see cref="IFilter"/>
+/// A service that can build and cache <see cref="IFilter"/> instances.
 /// </summary>
 /// <remarks>
-/// This interface should be implemented to provide a custom implementation that can be used to convert input
+/// This interface should be implemented to provide a custom service that can be used to convert <see langword="string"/>s
+/// to their equivalent <see cref="IFilter"/>s.
 /// </remarks>
 public interface IDataFilterService
 {

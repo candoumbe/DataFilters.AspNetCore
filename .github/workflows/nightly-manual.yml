@@ -9,23 +9,14 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration GitHubActions_continuous --host GitHubActions
+#         nuke --generate-configuration GitHubActions_nightly-manual --host GitHubActions
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
-name: continuous
+name: nightly-manual
 
-on:
-  push:
-    branches-ignore:
-      - MainBranchName
-  pull_request:
-    paths:
-      - '!docs/*'
-      - '!README.md'
-      - '!CHANGELOG.md'
-      - '!LICENSE'
+on: [workflow_dispatch]
 
 jobs:
   ubuntu-latest:
@@ -42,12 +33,16 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('global.json', 'src/**/*.csproj') }}
-      - name: 'Run: UnitTests, ReportUnitTestCoverage, Pack'
-        run: ./build.cmd UnitTests ReportUnitTestCoverage Pack
+      - name: 'Run: MutationTests, Pack'
+        run: ./build.cmd MutationTests Pack
         env:
-          NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
-          CodecovToken: ${{ secrets.CODECOV_TOKEN }}
           StrykerDashboardApiKey: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Publish: mutation-tests'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-tests
+          path: output/artifacts/tests-results/mutation-tests
       - name: 'Publish: unit-tests'
         uses: actions/upload-artifact@v4
         with:
@@ -63,11 +58,6 @@ jobs:
         with:
           name: unit-tests-coverage-history
           path: output/artifacts/reports/coverage-history/unit-tests-coverage-history
-      - name: 'Publish: mutation-tests'
-        uses: actions/upload-artifact@v4
-        with:
-          name: mutation-tests
-          path: output/artifacts/tests-results/mutation-tests
       - name: 'Publish: packages'
         uses: actions/upload-artifact@v4
         with:

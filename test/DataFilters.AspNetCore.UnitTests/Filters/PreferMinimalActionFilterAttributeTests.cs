@@ -1,39 +1,34 @@
-﻿namespace DataFilters.AspNetCore.UnitTests.Filters
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq.Expressions;
+using DataFilters.AspNetCore.Attributes;
+using DataFilters.AspNetCore.Filters;
+using FluentAssertions;
+using FluentAssertions.Equivalency.Tracing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
+using NSubstitute;
+using Xunit;
+using Xunit.Abstractions;
+using Xunit.Categories;
+using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.UnitTests.Filters
 {
-    using DataFilters.AspNetCore.Attributes;
-    using DataFilters.AspNetCore.Filters;
-
-    using FluentAssertions;
-
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Primitives;
-
-    using Moq;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq.Expressions;
-
-    using Xunit;
-    using Xunit.Abstractions;
-    using Xunit.Categories;
-
-    using static Microsoft.AspNetCore.Http.HttpMethods;
-
     [UnitTest]
     public class PreferMinimalActionFilterAttributeTests
     {
-        private readonly ITestOutputHelper _outputHelper;
+        private readonly PreferMinimalActionFilterAttribute _sut;
 
         public PreferMinimalActionFilterAttributeTests(ITestOutputHelper outputHelper)
         {
-            _outputHelper = outputHelper;
+            _sut = new PreferMinimalActionFilterAttribute();
         }
 
         [Fact]
@@ -52,16 +47,16 @@
                                      .BeDerivedFrom<ActionFilterAttribute>();
         }
 
-        public static IEnumerable<object[]> OkObjectResultCases
+        public static TheoryData<string, IHeaderDictionary, object, Expression<Func<ExpandoObject, bool>>, string> OkObjectResultCases
         {
             get
             {
-                StringValues preferHeaderValue = new ("return=minimal");
-                string[] methods = { Get, Post, Put, Patch };
+                StringValues preferHeaderValue = new("return=minimal");
+                string[] methods = [Get, Post, Put, Patch];
+                TheoryData<string, IHeaderDictionary, object, Expression<Func<ExpandoObject, bool>>, string> cases = new();
                 foreach (string method in methods)
                 {
-                    yield return new object[]
-                    {
+                    cases.Add(
                         method,
                         new HeaderDictionary(new Dictionary<string, StringValues>
                         {
@@ -73,8 +68,9 @@
                                                                            && expando.Once(kv => kv.Key == nameof(FooWithMinimalProps.Baz))
                                                                ),
                         $"The filter is configured to support HTTP verb '{method}' is supported and '{PreferMinimalActionFilterAttribute.PreferHeaderName}' header is set to {preferHeaderValue}"
-                    };
+                    );
                 }
+                return cases;
             }
         }
 
@@ -87,27 +83,27 @@
                                                                                                                                                                            string reason)
         {
             // Arrange
-            DefaultHttpContext httpContext = new();
-            httpContext.Request.Method = method;
+            DefaultHttpContext httpContext = new()
+            {
+                Request = { Method = method }
+            };
             headers.ForEach(header => httpContext.Request.Headers.TryAdd(header.Key, header.Value));
 
             ActionContext actionContext = new(
                httpContext,
-               new Mock<RouteData>().Object,
-               new Mock<ActionDescriptor>().Object,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
                new ModelStateDictionary());
 
             ActionExecutedContext actionExecutedContext = new(actionContext,
                                                               new List<IFilterMetadata>(),
-                                                              new Mock<object>())
+                                                              Substitute.For<object>())
             {
                 Result = new OkObjectResult(actual)
             };
 
-            PreferMinimalActionFilterAttribute sut = new();
-
             // Act
-            sut.OnActionExecuted(actionExecutedContext);
+            _sut.OnActionExecuted(actionExecutedContext);
 
             // Assert
             IActionResult result = actionExecutedContext.Result;
@@ -117,7 +113,78 @@
                   .Should().Match(expectedResult, reason);
         }
 
-        internal record FooWithMinimalProps
+        public static TheoryData<string, IHeaderDictionary, object, object, string> MissingOrIncorrectHeaderCases
+        {
+            get
+            {
+                (StringValues preferHeaderValues, string reason)[] preferHeaderValuesAndReason = [
+                    (new StringValues(), "The header as no value set"),
+                    (new StringValues("return=representation"), "The header's value is `representation` which should not activate the filter."),
+                    (new StringValues(["return=representation", "return=minimal"]), "The header has both minimal and representation values")
+                ];
+                string[] methods = [Get, Post, Put, Patch];
+
+                TheoryData<string, IHeaderDictionary, object, object, string> cases = new();
+
+                foreach ((StringValues preferHeaderValue, string reason) in preferHeaderValuesAndReason)
+                {
+                    foreach (string method in methods)
+                    {
+                        cases.Add(
+                            method,
+                            new HeaderDictionary(new Dictionary<string, StringValues>
+                            {
+                                [PreferMinimalActionFilterAttribute.PreferHeaderName] = preferHeaderValue
+                            }),
+                            new FooWithMinimalProps(),
+                            new FooWithMinimalProps(),
+                            reason
+                        );
+                    }
+                }
+
+                return cases;
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(MissingOrIncorrectHeaderCases))]
+        public void Given_request_with_Prefer_header_When_Prefer_header_is_not_present_or_has_incorrect_value__Then_attribute_not_do_anything(string method,
+                                                                                                                                              IHeaderDictionary headers,
+                                                                                                                                              object actual,
+                                                                                                                                              object expected,
+                                                                                                                                              string reason)
+        {
+            // Arrange
+            DefaultHttpContext httpContext = new()
+            {
+                Request = { Method = method }
+            };
+            headers.ForEach(header => httpContext.Request.Headers.TryAdd(header.Key, header.Value));
+
+            ActionContext actionContext = new(
+               httpContext,
+               Substitute.For<RouteData>(),
+               Substitute.For<ActionDescriptor>(),
+               new ModelStateDictionary());
+
+            ActionExecutedContext actionExecutedContext = new(actionContext, filters: [], controller: Substitute.For<object>())
+            {
+                Result = new OkObjectResult(actual)
+            };
+
+            // Act
+            _sut.OnActionExecuted(actionExecutedContext);
+
+            // Assert
+            IActionResult result = actionExecutedContext.Result;
+
+            result.Should()
+                  .BeAssignableTo<ObjectResult>().Which.Value
+                  .Should().BeEquivalentTo(expected, reason);
+        }
+
+        private record FooWithMinimalProps
         {
             [Minimal]
             public string Prop1 { get; set; } = nameof(Prop1);
@@ -125,7 +192,7 @@
             public Baz Baz { get; set; } = new();
         }
 
-        internal record Baz
+        private record Baz
         {
             public string Prop1 { get; set; } = nameof(Prop1);
 

@@ -39,7 +39,7 @@ namespace DataFilters.AspNetCore
         private FilterOptions _filterOptions;
 
         /// <summary>
-        /// Builds a new <see cref="DataFilterOptions"/> instance using the <see cref="DefaultCacheSize"/>.
+        /// Builds a new <see cref="DataFilterOptions"/> instance using the <see cref="DefaultCacheSize"/> value.
         /// </summary>
         public DataFilterOptions()
         {

@@ -3,6 +3,7 @@
 
 namespace DataFilters.AspNetCore.Filters;
 
+using System;
 using DataFilters.AspNetCore.Attributes;
 
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,12 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Http;
 using static Microsoft.AspNetCore.Http.HttpMethods;
 
-
 /// <summary>
-/// This action filter implementation, in conjunction with <see cref="MinimalAttribute"/>, handles the HTTP <see href="https://httpwg.org/specs/rfc7240.html#return">Prefer</see> header
+/// This action filter implementation, in conjunction with <see cref="MinimalAttribute"/>, handles
+/// the HTTP <see href="https://httpwg.org/specs/rfc7240.html#return">Prefer</see> header.
 /// </summary>
 public class PreferMinimalActionFilterAttribute : ActionFilterAttribute
 {
@@ -26,20 +27,28 @@ public class PreferMinimalActionFilterAttribute : ActionFilterAttribute
     /// </summary>
     public const string PreferHeaderName = "Prefer";
 
+    private const string PreferHeaderReturnMinimal = "return=minimal";
+
     ///<inheritdoc/>
     public override void OnActionExecuted(ActionExecutedContext context)
     {
-        if (CanHandleRequest(context.HttpContext.Request.Method) && context.Result is OkObjectResult result)
+        if (CanHandleRequest(context.HttpContext.Request) && context.Result is OkObjectResult result)
         {
             ExpandoObject expando = ExtractProperties(result.Value);
 
             context.Result = new OkObjectResult(expando);
         }
 
-        static bool CanHandleRequest(in string method) => IsGet(method)
-                                                       || IsPost(method)
-                                                       || IsPatch(method)
-                                                       || IsPut(method);
+        static bool CanHandleRequest(in HttpRequest request) => IsMethodSupported(request.Method) && HasRequiredHeaders(request.Headers);
+
+        static bool IsMethodSupported(in string method) => IsGet(method)
+                                                           || IsPost(method)
+                                                           || IsPatch(method)
+                                                           || IsPut(method);
+
+        static bool HasRequiredHeaders(in IHeaderDictionary headers) => headers.ContainsKey(PreferHeaderName)
+                                                                        && headers[PreferHeaderName].Exactly(1)
+                                                                        && string.Equals(headers[PreferHeaderName].Single(), PreferHeaderReturnMinimal, StringComparison.OrdinalIgnoreCase);
 
         static ExpandoObject ExtractProperties(object obj)
         {

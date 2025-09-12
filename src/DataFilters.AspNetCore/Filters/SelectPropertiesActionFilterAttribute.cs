@@ -53,24 +53,23 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
     /// </summary>
     public const string ExcludeFieldSelectorHeaderName = "x-datafilters-fields-exclude";
 
-
     /// <summary>
-    /// Indicates if the selector is applied to reponses triggered by HTTP "GET" requests
+    /// Indicates if the selector is applied to responses triggered by HTTP "GET" requests
     /// </summary>
     public bool OnGet { get; }
 
     /// <summary>
-    /// Indicates if the selector is applied to reponses triggered by HTTP "POST" requests
+    /// Indicates if the selector is applied to responses triggered by HTTP "POST" requests
     /// </summary>
     public bool OnPost { get; }
 
     /// <summary>
-    /// Indicates if the selector is applied to reponses triggered by HTTP "PATCH" requests
+    /// Indicates if the selector is applied to responses triggered by HTTP "PATCH" requests
     /// </summary>
     public bool OnPatch { get; }
 
     /// <summary>
-    /// Indicates if the selector is applied to reponses triggered by HTTP "PUT" requests
+    /// Indicates if the selector is applied to responses triggered by HTTP "PUT" requests
     /// </summary>
     public bool OnPut { get; }
 
