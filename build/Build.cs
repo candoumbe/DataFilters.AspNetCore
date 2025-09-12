@@ -25,7 +25,8 @@ namespace DataFilters.ContinuousIntegration
                       ImportSecrets =
                       [
                           nameof(IPushNugetPackages.NuGetApiKey),
-                          nameof(IReportCoverage.CodecovToken)
+                          nameof(IReportCoverage.CodecovToken),
+                          nameof(IMutationTest.StrykerDashboardApiKey)
                       ],
                       OnPullRequestExcludePaths =
                       [
@@ -45,7 +46,12 @@ namespace DataFilters.ContinuousIntegration
         EnableGitHubToken = true,
         CacheKeyFiles = ["global.json", "src/**/*.csproj"],
         PublishArtifacts = true,
-        ImportSecrets = [nameof(IPushNugetPackages.NuGetApiKey)],
+        ImportSecrets =
+        [
+            nameof(IPushNugetPackages.NuGetApiKey),
+            nameof(IReportCoverage.CodecovToken),
+            nameof(IMutationTest.StrykerDashboardApiKey)
+        ],
         OnPullRequestExcludePaths =
         [
             "docs/*",
