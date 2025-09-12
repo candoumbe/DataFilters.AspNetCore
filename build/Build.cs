@@ -12,6 +12,8 @@ namespace DataFilters.ContinuousIntegration
     using Candoumbe.Pipelines.Components.GitHub;
     using System.Linq;
     using Candoumbe.Pipelines.Components.Workflows;
+    using Nuke.Common.Tooling;
+    using Nuke.Common.Tools.ReportGenerator;
 
     [GitHubActions(
                       "continuous",
@@ -111,10 +113,15 @@ namespace DataFilters.ContinuousIntegration
 
         ///<inheritdoc/>
         IEnumerable<MutationProjectConfiguration> IMutationTest.MutationTestsProjects
-            => new[] { "DataFilters.AspNetCore" }
-                .Select(projectName => new MutationProjectConfiguration(Solution.AllProjects.Single(csproj => string.Equals(csproj.Name, projectName, StringComparison.InvariantCultureIgnoreCase)),
+            => s_projectsWithUnitTests.Select(projectName => new MutationProjectConfiguration(Solution.AllProjects.Single(csproj => string.Equals(csproj.Name, projectName, StringComparison.InvariantCultureIgnoreCase)),
                                                                         Solution.AllProjects.Where(csproj => csproj.Name.EndsWith($"{projectName}.UnitTests", StringComparison.InvariantCultureIgnoreCase)),
                                                                         this.Get<IHaveTestDirectory>().TestDirectory / $"{projectName}.UnitTests" / "stryker-config.json"))
                 .ToArray();
+
+
+        private static readonly string[] s_projectsWithUnitTests = ["DataFilters.AspNetCore"];
+
+        /// <inheritdoc />
+        Configure<ReportGeneratorSettings> IReportUnitTestCoverage.ReportGeneratorSettings => _ => _.SetFramework("net8.0");
     }
 }
