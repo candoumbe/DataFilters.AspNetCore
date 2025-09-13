@@ -1,6 +1,8 @@
 {
-  "GitHubToken": "v1:g53mFMH6PyC+NZYQX9m5jPKImeC257+le5wcN6RTxIa/C6hm3EDPLsh6CtQNQnWLuiUL49d7WuyV0OZS/UyOMMFW5CRgRRZC/tUaoqiJPnucmbMuPgF931dbL3dou6lz",
-  "NugetApiKey": "v1:Z2RAWjPeRgFploGorSP8GMqC66P78vCXjZwETIBkZY+3eqnVxDilBReLnDCEtI7/",
-  "StrykerDashboardApiKey": "v1:JEQsijbvz6iEqdu70EPaA6aIXfp7lyh4HCozze9AWwl+Dd9og5eNJXRrn41HSoD2",
-  "CodecovToken": "v1:TvPOE55QwGcB9cSHbELON5bZkYbXo74Nu6xSb8vy37is/K9v200Mu/HQ9CsVkzoQ"
+  "$schema": "./build.schema.json",
+  "CodecovToken": "v1:jKm6SB/2MC0mZ+lINXAUoMxgOSMClrASR43BWHFStTM7bXViAkILMtrsvW0R34Y5",
+  "GitHubToken": "v1:VagR7Ay2Nm6iZYyilV+0V0xqy+bFwO8ykT9W2yWehyj2u7u7eA7Ysmtek7DpGkVMdKOjZkiJwdap8wkRuxswIycMjtzhMtRlVOb37rDfwqwxg+V7h7h/iHEFAb+TMiXd",
+  "NuGetApiKey": "v1:CjatUOqJ+HHtB7Echzq+bgIx/gMWHaF/YAeG4NUwb24XBz0BEUvb1lgV7Oid/IWT",
+  "StrykerDashboardApiKey": "v1:srmQzUbTe8aLkvevoBvTrBtfioJHzq//mgFVeTkIVUGNLT7FSM96eXmBE/lH5emo",
+  "DeleteLocalOnSuccess": true
 }

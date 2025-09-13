@@ -10,10 +10,10 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace DataFilters.ContinuousIntegration;
-
 
 [GitHubActions(
                   "continuous",
@@ -22,7 +22,14 @@ namespace DataFilters.ContinuousIntegration;
                   FetchDepth = 0,
                   OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
                   PublishArtifacts = true,
-                  InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
+                  InvokedTargets =
+                  [
+                      nameof(IUnitTest.UnitTests),
+                      nameof(IMutationTest.MutationTests),
+                      nameof(IReportUnitTestCoverage.ReportUnitTestCoverage),
+                      nameof(IPack.Pack),
+                      nameof(IPushNugetPackages.Publish)
+                  ],
                   CacheKeyFiles = ["global.json", "src/**/*.csproj"],
                   ImportSecrets =
                   [
@@ -62,7 +69,6 @@ namespace DataFilters.ContinuousIntegration;
                       "LICENSE"
                   ]
               )]
-
 [GitHubActions(
                   "nightly-manual",
                   GitHubActionsImage.UbuntuLatest,
@@ -75,7 +81,6 @@ namespace DataFilters.ContinuousIntegration;
                   PublishArtifacts = true,
                   ImportSecrets = [nameof(IMutationTest.StrykerDashboardApiKey)]
               )]
-
 public class Build : EnhancedNukeBuild,
     IHaveSourceDirectory,
     IHaveTestDirectory,
@@ -91,11 +96,14 @@ public class Build : EnhancedNukeBuild,
 {
     public static int Main() => Execute<Build>(x => ((ICompile)x).Compile);
 
-    [Required][Solution] public Solution Solution;
+    [Required] [Solution] public Solution Solution;
 
     ///<inheritdoc/>
-    IEnumerable<AbsolutePath> IClean.DirectoriesToDelete => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobDirectories("**/bin", "**/obj")
-        .Concat(this.Get<IHaveTestDirectory>().TestDirectory.GlobDirectories("**/bin", "**/obj"));
+    IEnumerable<AbsolutePath> IClean.DirectoriesToDelete =>
+    [
+        .. this.Get<IHaveSourceDirectory>().SourceDirectory.GlobDirectories("**/bin", "**/obj"),
+        .. this.Get<IHaveTestDirectory>().TestDirectory.GlobDirectories("**/bin", "**/obj")
+    ];
 
     ///<inheritdoc/>
     Solution IHaveSolution.Solution => Solution;
@@ -107,7 +115,18 @@ public class Build : EnhancedNukeBuild,
     IEnumerable<AbsolutePath> IPack.PackableProjects => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobFiles("*.csproj");
 
     ///<inheritdoc/>
-    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations => throw new NotImplementedException();
+    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations =>
+    [
+        new NugetPushConfiguration(
+                                   apiKey: this.As<IPushNugetPackages>()?.NuGetApiKey,
+                                   source: new Uri("https://api.nuget.org/v3/index.json"),
+                                   canBeUsed: () => this.As<IPushNugetPackages>()?.NuGetApiKey is not null
+                                  ),
+        new GitHubPushNugetConfiguration(
+                                         githubToken: this.Get<ICreateGithubRelease>()?.GitHubToken,
+                                         source: new Uri($"https://nuget.pkg.github.com/{this.Get<IHaveGitHubRepository>().GitRepository.GetGitHubOwner()}/index.json"),
+                                         canBeUsed: () => this is ICreateGithubRelease { GitHubToken: not null })
+    ];
 
     ///<inheritdoc/>
     bool IReportCoverage.ReportToCodeCov => this.Get<IReportCoverage>().CodecovToken is not null;
