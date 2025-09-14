@@ -1,5 +1,6 @@
 {
   "$schema": "./build.schema.json",
   "Solution": "DataFilters.AspNetCore.sln",
-  "Formatters": ["Analyzers", "Style"]
+  "Formatters": ["Analyzers", "Style"],
+  "DeleteLocalOnSuccess": true
 }
