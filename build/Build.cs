@@ -5,6 +5,7 @@ using Candoumbe.Pipelines.Components;
 using Candoumbe.Pipelines.Components.Formatting;
 using Candoumbe.Pipelines.Components.GitHub;
 using Candoumbe.Pipelines.Components.NuGet;
+using Candoumbe.Pipelines.Components.Workflows;
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
@@ -20,9 +21,15 @@ namespace DataFilters.ContinuousIntegration;
                   GitHubActionsImage.UbuntuLatest,
                   AutoGenerate = false,
                   FetchDepth = 0,
-                  OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
+                  OnPushBranchesIgnore = [IHaveMainBranch.MainBranchName],
                   PublishArtifacts = true,
-                  InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
+                  InvokedTargets =
+                  [
+                      nameof(IUnitTest.UnitTests),
+                      nameof(IReportUnitTestCoverage.ReportUnitTestCoverage),
+                      nameof(IMutationTest.MutationTests),
+                      nameof(IPack.Pack)
+                  ],
                   CacheKeyFiles = ["global.json", "src/**/*.csproj"],
                   ImportSecrets =
                   [
@@ -43,8 +50,13 @@ namespace DataFilters.ContinuousIntegration;
                   GitHubActionsImage.UbuntuLatest,
                   AutoGenerate = false,
                   FetchDepth = 0,
-                  OnPushBranches = [nameof(IGitFlow.MainBranchName), nameof(IGitFlow.ReleaseBranchPrefix) + "/*"],
-                  InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IPushNugetPackages.Publish), nameof(ICreateGithubRelease.AddGithubRelease)],
+                  OnPushBranches = [IGitFlow.MainBranchName],
+                  InvokedTargets =
+                  [
+                      nameof(IUnitTest.UnitTests),
+                      nameof(IPushNugetPackages.Publish),
+                      nameof(ICreateGithubRelease.AddGithubRelease)
+                  ],
                   EnableGitHubToken = true,
                   CacheKeyFiles = ["global.json", "src/**/*.csproj"],
                   PublishArtifacts = true,
@@ -107,7 +119,15 @@ public class Build : EnhancedNukeBuild,
     IEnumerable<AbsolutePath> IPack.PackableProjects => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobFiles("*.csproj");
 
     ///<inheritdoc/>
-    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations => throw new NotImplementedException();
+    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations =>
+    [
+        new NugetPushConfiguration(apiKey: this.Get<IPushNugetPackages>().NuGetApiKey,
+                                   canBeUsed: () => this.Get<IPushNugetPackages>().NuGetApiKey is not null,
+                                   source: "https://api.nuget.org/v3/index.json"),
+        new GitHubPushNugetConfiguration(githubToken: this.Get<IHaveGitHubRepository>().GitHubToken,
+                                         canBeUsed: () => this.Get<IHaveGitHubRepository>().GitHubToken is not null,
+                                         source: new Uri("https://nuget.pkg.github.com/candoumbe/index.json"))
+    ];
 
     ///<inheritdoc/>
     bool IReportCoverage.ReportToCodeCov => this.Get<IReportCoverage>().CodecovToken is not null;

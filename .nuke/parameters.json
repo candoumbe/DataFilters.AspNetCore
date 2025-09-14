@@ -1,4 +1,5 @@
 {
   "$schema": "./build.schema.json",
-  "Solution": "DataFilters.AspNetCore.sln"
+  "Solution": "DataFilters.AspNetCore.sln",
+  "Formatters": ["Analyzers", "Style"]
 }

@@ -19,8 +19,7 @@ name: deployment
 on:
   push:
     branches:
-      - MainBranchName
-      - 'ReleaseBranchPrefix/*'
+      - main
   pull_request:
     paths:
       - '!docs/*'
