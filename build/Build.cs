@@ -22,7 +22,12 @@ namespace DataFilters.ContinuousIntegration;
                   FetchDepth = 0,
                   OnPushBranchesIgnore = [nameof(IGitFlow.MainBranchName)],
                   PublishArtifacts = true,
-                  InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IReportUnitTestCoverage.ReportUnitTestCoverage), nameof(IPack.Pack)],
+                  InvokedTargets = [
+                      nameof(IUnitTest.UnitTests),
+                      nameof(IReportUnitTestCoverage.ReportUnitTestCoverage),
+                      nameof(IMutationTest.MutationTests),
+                      nameof(IPushNugetPackages.Publish)
+                  ],
                   CacheKeyFiles = ["global.json", "src/**/*.csproj"],
                   ImportSecrets =
                   [
