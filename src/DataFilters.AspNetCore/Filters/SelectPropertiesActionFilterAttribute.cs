@@ -1,20 +1,18 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.Filters;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Primitives;
-
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Primitives;
 using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.Filters;
 
 /// <summary>
 /// An <see cref="ActionFilterAttribute"/> implementation that allows to specify which properties an object

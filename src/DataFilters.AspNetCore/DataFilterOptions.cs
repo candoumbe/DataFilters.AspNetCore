@@ -1,50 +1,48 @@
-﻿
-namespace DataFilters.AspNetCore
+﻿using DataFilters.Casing;
+
+namespace DataFilters.AspNetCore;
+
+/// <summary>
+/// <see cref="DataFilterOptions"/> allows to customize the behavior of <see cref="IDataFilterService"/>
+/// </summary>
+#if NET6_0_OR_GREATER
+public record DataFilterOptions
+#else
+public class DataFilterOptions
+#endif
 {
-    using DataFilters.Casing;
+    private const long DefaultCacheSize = 1_000;
 
     /// <summary>
-    /// <see cref="DataFilterOptions"/> allows to customize the behavior of <see cref="IDataFilterService"/>
+    /// Defines the number of elements to keep in the local cache
     /// </summary>
-#if NET6_0_OR_GREATER
-    public record DataFilterOptions
-#else
-    public class DataFilterOptions
-#endif
+    /// <remarks>
+    /// Setting this to a negative value means no cache will be used
+    /// </remarks>
+    public long MaxCacheSize { get; set; }
+
+    /// <summary>
+    /// Default options to use when computing <see cref="IFilter"/> instances.
+    /// </summary>
+    public FilterOptions FilterOptions
     {
-        private const long DefaultCacheSize = 1_000;
-
-        /// <summary>
-        /// Defines the number of elements to keep in the local cache
-        /// </summary>
-        /// <remarks>
-        /// Setting this to a negative value means no cache will be used
-        /// </remarks>
-        public long MaxCacheSize { get; set; }
-
-        /// <summary>
-        /// Default options to use when computing <see cref="IFilter"/> instances.
-        /// </summary>
-        public FilterOptions FilterOptions
-        {
-            get => _filterOptions;
+        get => _filterOptions;
 #if NET6_0_OR_GREATER
             init
 #else
-            set
+        set
 #endif
-                => _filterOptions = value ?? new ();
-        }
+            => _filterOptions = value ?? new ();
+    }
 
-        private FilterOptions _filterOptions;
+    private FilterOptions _filterOptions;
 
-        /// <summary>
-        /// Builds a new <see cref="DataFilterOptions"/> instance using the <see cref="DefaultCacheSize"/> value.
-        /// </summary>
-        public DataFilterOptions()
-        {
-            MaxCacheSize = DefaultCacheSize;
-            FilterOptions = new();
-        }
+    /// <summary>
+    /// Builds a new <see cref="DataFilterOptions"/> instance using the <see cref="DefaultCacheSize"/> value.
+    /// </summary>
+    public DataFilterOptions()
+    {
+        MaxCacheSize = DefaultCacheSize;
+        FilterOptions = new();
     }
 }
