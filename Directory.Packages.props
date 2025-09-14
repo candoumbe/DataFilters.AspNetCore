@@ -11,7 +11,7 @@
     <PackageVersion Include="Candoumbe.Pipelines" Version="1.2.1" />
     <PackageVersion Include="CodecovUploader" Version="0.8.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
-    <PackageVersion Include="DataFilters" Version="0.13.1" />
+    <PackageVersion Include="DataFilters" Version="0.13.2" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FsCheck.XUnit" Version="2.16.6" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
