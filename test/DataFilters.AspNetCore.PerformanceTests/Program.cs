@@ -1,9 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
+using DataFilters.AspNetCore.PerfomanceTests;
 
-namespace DataFilters.AspNetCore.PerfomanceTests;
-
-public class Program
-{
-    static void Main(string[] args) => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
-        .Run(args);
-}
+BenchmarkSwitcher.FromAssembly(typeof(RawFilterVsDataFilters).Assembly).Run(args);

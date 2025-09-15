@@ -25,7 +25,9 @@ public class DataFiltersOptionsInvalidValueException : Exception
     }
 
     ///<inheritdoc/>
-    [Obsolete]
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "S1123")]
+#endif
     protected DataFiltersOptionsInvalidValueException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

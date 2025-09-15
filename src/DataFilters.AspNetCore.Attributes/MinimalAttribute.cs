@@ -1,15 +1,12 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.Attributes;
-
 using System;
 
+namespace DataFilters.AspNetCore.Attributes;
+
 /// <summary>
-/// This attribute can be used to mark a property so that 
-/// when it will be rendered when the HTTP header <c>Prefer:return=minimal</c>.
+/// This attribute can be used to mark a property to include in HTTP reponses to requests that include the HTTP header <c>Prefer:return=minimal</c>.
 /// </summary>
-[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-public sealed class MinimalAttribute : Attribute
-{
-}
+[AttributeUsage(validOn: AttributeTargets.Property)]
+public sealed class MinimalAttribute : Attribute;

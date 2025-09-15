@@ -18,6 +18,7 @@ namespace DataFilters.AspNetCore.Filters;
 /// This action filter implementation, in conjunction with <see cref="MinimalAttribute"/>, handles
 /// the HTTP <see href="https://httpwg.org/specs/rfc7240.html#return">Prefer</see> header.
 /// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class PreferMinimalActionFilterAttribute : ActionFilterAttribute
 {
     /// <summary>

@@ -88,7 +88,9 @@ public class SelectTests
     [Theory]
     [InlineData("prop")]
     [InlineData("prop.subProp")]
-    [InlineData(@"prop[""subProp""]")]
+    [InlineData("""
+                prop["subProp"]
+                """)]
     public void Given_valid_inputs_Ctor_should_fills_Expression_property_accordingly(string input)
     {
         // Act

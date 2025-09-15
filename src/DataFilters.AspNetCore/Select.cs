@@ -54,7 +54,7 @@ public sealed class Select : IEquatable<Select>, IEqualityComparer<Select>
     public override string ToString() => this.Jsonify();
 
     /// <inheritdoc/>
-    public bool Equals(Select x, Select y) => x.Equals(y);
+    public bool Equals(Select x, Select y) => x?.Equals(y) ?? false;
 
     /// <inheritdoc/>
     public int GetHashCode([DisallowNull] Select obj) => obj.GetHashCode();
