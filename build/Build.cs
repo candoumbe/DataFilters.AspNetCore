@@ -86,7 +86,6 @@ public class Build : EnhancedNukeBuild,
     IHaveSolution,
     IClean,
     IRestore,
-    IDotnetFormat,
     IMutationTest,
     IReportUnitTestCoverage,
     IPushNugetPackages,
@@ -138,14 +137,6 @@ public class Build : EnhancedNukeBuild,
 
     /// <inheritdoc />
     Configure<ReportGeneratorSettings> IReportUnitTestCoverage.ReportGeneratorSettings => _ => _.SetFramework("net8.0");
-
-    /// <inheritdoc />
-    bool IDotnetFormat.VerifyNoChanges => IsLocalBuild;
-
-    /// <inheritdoc />
-    Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _
-                                                                        .SetNoRestore(false)
-                                                                        .When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
 
     /// <inheritdoc />
     Configure<DotNetPackSettings> IPack.PackSettings => _ => _.SetNoBuild(false);
