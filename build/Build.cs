@@ -98,8 +98,10 @@ public class Build : EnhancedNukeBuild,
     [Required][Solution] public Solution Solution;
 
     ///<inheritdoc/>
-    IEnumerable<AbsolutePath> IClean.DirectoriesToDelete => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobDirectories("**/bin", "**/obj")
-        .Concat(this.Get<IHaveTestDirectory>().TestDirectory.GlobDirectories("**/bin", "**/obj"));
+    IEnumerable<AbsolutePath> IClean.DirectoriesToDelete => [
+        .. this.Get<IHaveSourceDirectory>().SourceDirectory.GlobDirectories("**/bin", "**/obj"),
+        .. this.Get<IHaveTestDirectory>().TestDirectory.GlobDirectories("**/bin", "**/obj")
+    ];
 
     ///<inheritdoc/>
     Solution IHaveSolution.Solution => Solution;
@@ -138,7 +140,7 @@ public class Build : EnhancedNukeBuild,
     Configure<ReportGeneratorSettings> IReportUnitTestCoverage.ReportGeneratorSettings => _ => _.SetFramework("net8.0");
 
     /// <inheritdoc />
-    bool IDotnetFormat.VerifyNoChanges => IsServerBuild;
+    bool IDotnetFormat.VerifyNoChanges => IsLocalBuild;
 
     /// <inheritdoc />
     Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _
