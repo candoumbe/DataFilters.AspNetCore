@@ -138,7 +138,7 @@ public class Build : EnhancedNukeBuild,
     Configure<ReportGeneratorSettings> IReportUnitTestCoverage.ReportGeneratorSettings => _ => _.SetFramework("net8.0");
 
     /// <inheritdoc />
-    bool IDotnetFormat.VerifyNoChanges => IsLocalBuild;
+    bool IDotnetFormat.VerifyNoChanges => IsServerBuild;
 
     /// <inheritdoc />
     Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _.When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
