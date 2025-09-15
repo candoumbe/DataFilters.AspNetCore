@@ -10,11 +10,9 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Tools.ReportGenerator;
-
-namespace DataFilters.ContinuousIntegration;
-
 
 [GitHubActions(
                   "continuous",
@@ -49,7 +47,7 @@ namespace DataFilters.ContinuousIntegration;
                   GitHubActionsImage.UbuntuLatest,
                   AutoGenerate = false,
                   FetchDepth = 0,
-                  OnPushBranches = [nameof(IGitFlow.MainBranchName), nameof(IGitFlow.ReleaseBranchPrefix) + "/*"],
+                  OnPushBranches = [IGitFlow.MainBranchName, IGitFlow.ReleaseBranch + "/*"],
                   InvokedTargets = [nameof(IUnitTest.UnitTests), nameof(IPushNugetPackages.Publish), nameof(ICreateGithubRelease.AddGithubRelease)],
                   EnableGitHubToken = true,
                   CacheKeyFiles = ["global.json", "src/**/*.csproj"],
@@ -81,7 +79,7 @@ namespace DataFilters.ContinuousIntegration;
                   PublishArtifacts = true,
                   ImportSecrets = [nameof(IMutationTest.StrykerDashboardApiKey)]
               )]
-
+[DotNetVerbosityMapping]
 public class Build : EnhancedNukeBuild,
     IHaveSourceDirectory,
     IHaveTestDirectory,
@@ -90,9 +88,9 @@ public class Build : EnhancedNukeBuild,
     IRestore,
     IDotnetFormat,
     IMutationTest,
+    IReportUnitTestCoverage,
     IPushNugetPackages,
     ICreateGithubRelease,
-    IReportUnitTestCoverage,
     IGitFlowWithPullRequest
 {
     public static int Main() => Execute<Build>(x => ((ICompile)x).Compile);
@@ -110,18 +108,15 @@ public class Build : EnhancedNukeBuild,
     IEnumerable<Project> IUnitTest.UnitTestsProjects => this.Get<IHaveSolution>().Solution.GetAllProjects("*.UnitTests");
 
     ///<inheritdoc/>
-    IEnumerable<AbsolutePath> IPack.PackableProjects => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobFiles("*.csproj");
+    IEnumerable<AbsolutePath> IPack.PackableProjects => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobFiles("**/*.csproj");
 
     ///<inheritdoc/>
     IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations =>
     [
-        new NugetPushConfiguration(
-                                   apiKey: this.Get<IPushNugetPackages>().NuGetApiKey,
+        new NugetPushConfiguration(apiKey: this.Get<IPushNugetPackages>().NuGetApiKey,
                                    source: new Uri("https://api.nuget.org/v3/index.json"),
-                                   canBeUsed: () => this.Get<IPushNugetPackages>().NuGetApiKey is not null
-                                  ),
-        new GitHubPushNugetConfiguration(
-                                         githubToken: this.Get<ICreateGithubRelease>()?.GitHubToken,
+                                   canBeUsed: () => this is IPushNugetPackages {NuGetApiKey: not null}),
+        new GitHubPushNugetConfiguration(githubToken: this.Get<ICreateGithubRelease>()?.GitHubToken,
                                          source: new Uri($"https://nuget.pkg.github.com/{this.Get<IHaveGitHubRepository>().GitRepository.GetGitHubOwner()}/index.json"),
                                          canBeUsed: () => this is ICreateGithubRelease { GitHubToken: not null } )
     ];
@@ -144,4 +139,7 @@ public class Build : EnhancedNukeBuild,
 
     /// <inheritdoc />
     bool IDotnetFormat.VerifyNoChanges => IsLocalBuild;
+
+    /// <inheritdoc />
+    Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _.When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
 }
