@@ -141,7 +141,9 @@ public class Build : EnhancedNukeBuild,
     bool IDotnetFormat.VerifyNoChanges => IsServerBuild;
 
     /// <inheritdoc />
-    Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _.When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
+    Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _
+                                                                        .SetNoRestore(false)
+                                                                        .When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
 
     /// <inheritdoc />
     Configure<DotNetPackSettings> IPack.PackSettings => _ => _.SetNoBuild(false);
