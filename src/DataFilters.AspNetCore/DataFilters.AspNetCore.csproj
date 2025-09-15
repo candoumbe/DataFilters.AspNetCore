@@ -17,13 +17,4 @@
     <ProjectReference Include="..\DataFilters.AspNetCore.Attributes\DataFilters.AspNetCore.Attributes.csproj" />
   </ItemGroup>
 
-  <Choose>
-    <When Condition="'$(TargetFramework)' == 'net6.0'">
-      <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-      </ItemGroup>
-    </When>
-    <Otherwise />
-  </Choose>
-
 </Project>
