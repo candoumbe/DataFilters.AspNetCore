@@ -142,4 +142,7 @@ public class Build : EnhancedNukeBuild,
 
     /// <inheritdoc />
     Configure<DotNetFormatSettings> IDotnetFormat.FormatSettings => _ => _.When(_ => IsLocalBuild, settings => settings.SetVerbosity(DotNetVerbosity.diagnostic));
+
+    /// <inheritdoc />
+    Configure<DotNetPackSettings> IPack.PackSettings => _ => _.SetNoBuild(false);
 }
