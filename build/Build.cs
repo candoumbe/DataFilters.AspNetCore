@@ -10,6 +10,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace DataFilters.ContinuousIntegration;
@@ -112,7 +113,18 @@ public class Build : EnhancedNukeBuild,
     IEnumerable<AbsolutePath> IPack.PackableProjects => this.Get<IHaveSourceDirectory>().SourceDirectory.GlobFiles("*.csproj");
 
     ///<inheritdoc/>
-    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations => throw new NotImplementedException();
+    IEnumerable<PushNugetPackageConfiguration> IPushNugetPackages.PublishConfigurations =>
+    [
+        new NugetPushConfiguration(
+                                   apiKey: this.Get<IPushNugetPackages>().NuGetApiKey,
+                                   source: new Uri("https://api.nuget.org/v3/index.json"),
+                                   canBeUsed: () => this.Get<IPushNugetPackages>().NuGetApiKey is not null
+                                  ),
+        new GitHubPushNugetConfiguration(
+                                         githubToken: this.Get<ICreateGithubRelease>()?.GitHubToken,
+                                         source: new Uri($"https://nuget.pkg.github.com/{this.Get<IHaveGitHubRepository>().GitRepository.GetGitHubOwner()}/index.json"),
+                                         canBeUsed: () => this is ICreateGithubRelease { GitHubToken: not null } )
+    ];
 
     ///<inheritdoc/>
     bool IReportCoverage.ReportToCodeCov => this.Get<IReportCoverage>().CodecovToken is not null;

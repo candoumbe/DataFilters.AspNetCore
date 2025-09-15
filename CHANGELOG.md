@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### 🧹 Housekeeping
 - Updated `DataFilters` to `0.13.2`
+- Added missing configuration for pushing NuGet packages to NuGet.org and GitHub Packages
 
 ## [0.5.0] / 2025-09-12
 ### 💥 Breaking changes
