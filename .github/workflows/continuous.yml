@@ -42,8 +42,8 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('global.json', 'src/**/*.csproj') }}
-      - name: 'Run: UnitTests, ReportUnitTestCoverage, Pack'
-        run: ./build.cmd UnitTests ReportUnitTestCoverage Pack
+      - name: 'Run: UnitTests, ReportUnitTestCoverage, MutationTests, Pack'
+        run: ./build.cmd UnitTests ReportUnitTestCoverage MutationTests Pack
         env:
           NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           CodecovToken: ${{ secrets.CODECOV_TOKEN }}
