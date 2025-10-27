@@ -1,14 +1,13 @@
-﻿namespace DataFilters.AspNetCore.PerfomanceTests
+﻿using System.Collections.Generic;
+
+namespace DataFilters.AspNetCore.PerfomanceTests;
+
+internal class SuperHero
 {
-    using System.Collections.Generic;
+    public string Nickname { get; init; }
 
-    internal class SuperHero
-    {
-        public string Nickname { get; init; }
+    public string[] Powers { get; init; }
 
-        public string[] Powers { get; init; }
+    public IEnumerable<SuperHero> Acolytes { get; init; }
 
-        public IEnumerable<SuperHero> Acolytes { get; init; }
-
-    }
 }

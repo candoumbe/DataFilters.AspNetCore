@@ -1,20 +1,18 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.Filters;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Primitives;
-
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Primitives;
 using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.Filters;
 
 /// <summary>
 /// An <see cref="ActionFilterAttribute"/> implementation that allows to specify which properties an object
@@ -24,11 +22,11 @@ using static Microsoft.AspNetCore.Http.HttpMethods;
 /// </para>
 /// </summary>
 /// <remarks>
-/// This action filter will only apply <strong>AFTER</strong> the code inside the controller action has runned :
+/// This action filter will only apply <b>AFTER</b> the code inside the controller action has run :
 /// <list type="number">
 ///     <item> the custom HTTP header with the specified name <see cref="IncludeFieldSelectorHeaderName"/> and or <see cref="ExcludeFieldSelectorHeaderName"/> was present on the incoming request </item>
 ///     <item>the action returned an <see cref="OkObjectResult"/>. </item>
-///     <item> at least one of the following conditions are met :
+///     <item> at least one of the following conditions is met :
 ///         <list type="bullet">
 ///             <item><see cref="OnGet"/> is <see langword="true"/> and <see cref="IsGet(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request.</item>
 ///             <item><see cref="OnPost"/> is <see langword="true"/> and <see cref="IsPost(string)"/> returns <see langword="true"/> for the HTTP method of the incoming request</item>
@@ -41,6 +39,7 @@ using static Microsoft.AspNetCore.Http.HttpMethods;
 /// Specifying both <see cref="IncludeFieldSelectorHeaderName"/> and <see cref="ExcludeFieldSelectorHeaderName"/> is a undefined behaviour which will result in a <see cref="BadRequestObjectResult"/>.
 /// </para>
 /// </remarks>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
 {
     /// <summary>
@@ -115,7 +114,9 @@ public class SelectPropertiesActionFilterAttribute : ActionFilterAttribute
 
         if (mustIncludeFields && mustExcludeFields)
         {
-            throw new InvalidOperationException($@"Only ""{IncludeFieldSelectorHeaderName}"" or ""{ExcludeFieldSelectorHeaderName}"" HTTP header can be set");
+            throw new InvalidOperationException($"""
+                                                 Only "{IncludeFieldSelectorHeaderName}" or "{ExcludeFieldSelectorHeaderName}" HTTP header can be set
+                                                 """);
         }
 
         if ((mustIncludeFields || mustExcludeFields) && context.Result is OkObjectResult objectResult && (fieldsToInclude.AtLeastOnce() || fieldsToExclude.AtLeastOnce())

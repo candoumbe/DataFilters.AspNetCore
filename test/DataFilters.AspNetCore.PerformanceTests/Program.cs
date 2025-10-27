@@ -1,10 +1,4 @@
-﻿namespace DataFilters.AspNetCore.PerfomanceTests
-{
-    using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
+using DataFilters.AspNetCore.PerfomanceTests;
 
-    public class Program
-    {
-        static void Main(string[] args) => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
-                                                            .Run(args);
-    }
-}
+BenchmarkSwitcher.FromAssembly(typeof(RawFilterVsDataFilters).Assembly).Run(args);

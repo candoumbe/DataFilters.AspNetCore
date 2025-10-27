@@ -1,16 +1,13 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.UnitTests.Attributes;
-
-using DataFilters.AspNetCore.Attributes;
-
-using FluentAssertions;
-
 using System;
-
+using DataFilters.AspNetCore.Attributes;
+using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
+
+namespace DataFilters.AspNetCore.UnitTests.Attributes;
 
 [UnitTest]
 public class MinimalAttributeTests
