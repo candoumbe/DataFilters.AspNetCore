@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] / 2025-10-27
+### ✨ Features
+- Refactored and updated codebase for improved functionality and maintainability
+- Added configuration to push NuGet packages to NuGet.org and GitHub Packages
+
+### 🚨 Fixes
+- Removed unused schema properties
+- Updated `PublishUrl` property and build settings to ensure correct package publication
+- Adjusted `dotnet format` verification and settings
+
+### 🧹 Housekeeping
+- Updated `DataFilters` to `0.13.2`
+- Updated `Candoumbe.Pipelines` to `1.2.1`
+- Updated project dependencies and analyzers (BenchmarkDotNet, ReportGenerator, Roslynator, etc.)
+- Adopted consistent `using` directives placement (outside namespace)
+- Removed `DataFiltersOptionsInvalidValueException` obsolete type
+- Added pack settings to prevent `--no-build` option during packaging
+- Upgraded GitVersion configuration and tooling
+- CI: updated GitHub Actions workflows and branch name references
+
 ## [0.5.0] / 2025-09-12
 ### 💥 Breaking changes
 - Dropped `net5.0` support ([#119](https://github.com/candoumbe/DataFilters.AspNetCore/issues/119))
@@ -40,7 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] / 2021-05-16
 - Initial release
 
-[Unreleased]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/candoumbe/DataFilters.AspNetCore/compare/0.2.0...0.3.0

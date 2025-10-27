@@ -1,25 +1,24 @@
 ﻿// "Copyright (c) Cyrille NDOUMBE.
 // Licenced under Apache, version 2.0"
 
-namespace DataFilters.AspNetCore.Filters;
-
 using System;
-using DataFilters.AspNetCore.Attributes;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using DataFilters.AspNetCore.Attributes;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using static Microsoft.AspNetCore.Http.HttpMethods;
+
+namespace DataFilters.AspNetCore.Filters;
 
 /// <summary>
 /// This action filter implementation, in conjunction with <see cref="MinimalAttribute"/>, handles
 /// the HTTP <see href="https://httpwg.org/specs/rfc7240.html#return">Prefer</see> header.
 /// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class PreferMinimalActionFilterAttribute : ActionFilterAttribute
 {
     /// <summary>
