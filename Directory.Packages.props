@@ -23,7 +23,7 @@
     <PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.17" />
     <PackageVersion Include="ReportGenerator" Version="5.5.1" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
-    <PackageVersion Include="SonarAnalyzer.Csharp" Version="10.17.0.131074" />
+    <PackageVersion Include="SonarAnalyzer.Csharp" Version="10.18.0.131500" />
     <PackageVersion Include="xunit" Version="2.8.1" />
     <PackageVersion Include="xunit.categories" Version="3.0.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
