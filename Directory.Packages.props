@@ -8,7 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="Candoumbe.Pipelines" Version="2.0.0" />
+    <PackageVersion Include="Candoumbe.Pipelines" Version="2.0.1" />
     <PackageVersion Include="CodecovUploader" Version="0.8.0" />
     <PackageVersion Include="coverlet.msbuild" Version="8.0.1" />
     <PackageVersion Include="DataFilters" Version="0.13.2" />
